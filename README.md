@@ -15,7 +15,7 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 [Refer to CoinGecko official API](https://www.coingecko.com/api)
 
 |            Endpoint             | Status | Testing |            Function            |
-| :-----------------------------: | :----: | :-----: | :----------------------------: |
+|:-------------------------------:|:------:|:-------:|:------------------------------:|
 |              /ping              |  [/]   |   [/]   |              Ping              |
 |          /simple/price          |  [/]   |   [/]   | SimpleSinglePrice, SimplePrice |
 | /simple/supported_vs_currencies |  [/]   |   [/]   |  SimpleSupportedVSCurrencies   |

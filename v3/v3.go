@@ -3,7 +3,7 @@ package coingecko
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -14,17 +14,48 @@ import (
 
 var baseURL = "https://api.coingecko.com/api/v3"
 
+type HttpRequestModifier func(r *http.Request)
+
 // Client struct
 type Client struct {
-	httpClient *http.Client
+	httpClient          *http.Client
+	baseURL             string
+	httpRequestModifier HttpRequestModifier
+}
+
+type ClientOption func(client *Client)
+
+func WithHttpRequestModifier(f HttpRequestModifier) ClientOption {
+	return func(c *Client) {
+		c.httpRequestModifier = f
+	}
+}
+
+func WithAPIKey(apiKey string) ClientOption {
+	return func(c *Client) {
+		c.baseURL = "https://pro-api.coingecko.com/api/v3"
+		c.httpRequestModifier = func(r *http.Request) {
+			r.Header.Set("x-cg-pro-api-key", apiKey)
+		}
+	}
 }
 
 // NewClient create new client object
-func NewClient(httpClient *http.Client) *Client {
+func NewClient(httpClient *http.Client, options ...ClientOption) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
-	return &Client{httpClient: httpClient}
+
+	c := &Client{
+		baseURL:    baseURL,
+		httpClient: httpClient,
+	}
+
+	for _, option := range options {
+		option(c)
+	}
+
+	return c
 }
 
 // helper
@@ -34,28 +65,37 @@ func doReq(req *http.Request, client *http.Client) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	if 200 != resp.StatusCode {
+
+	if http.StatusOK != resp.StatusCode {
 		return nil, fmt.Errorf("%s", body)
 	}
+
 	return body, nil
 }
 
 // MakeReq HTTP request helper
 func (c *Client) MakeReq(url string) ([]byte, error) {
-	req, err := http.NewRequest("GET", url, nil)
-
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	if c.httpRequestModifier != nil {
+		c.httpRequestModifier(req)
+	}
+
 	resp, err := doReq(req, c.httpClient)
 	if err != nil {
 		return nil, err
 	}
+
 	return resp, err
 }
 
@@ -63,7 +103,7 @@ func (c *Client) MakeReq(url string) ([]byte, error) {
 
 // Ping /ping endpoint
 func (c *Client) Ping() (*types.Ping, error) {
-	url := fmt.Sprintf("%s/ping", baseURL)
+	url := fmt.Sprintf("%s/ping", c.baseURL)
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -102,7 +142,7 @@ func (c *Client) SimplePrice(ids []string, vsCurrencies []string) (*map[string]m
 	params.Add("ids", idsParam)
 	params.Add("vs_currencies", vsCurrenciesParam)
 
-	url := fmt.Sprintf("%s/simple/price?%s", baseURL, params.Encode())
+	url := fmt.Sprintf("%s/simple/price?%s", c.baseURL, params.Encode())
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -119,7 +159,7 @@ func (c *Client) SimplePrice(ids []string, vsCurrencies []string) (*map[string]m
 
 // SimpleSupportedVSCurrencies /simple/supported_vs_currencies
 func (c *Client) SimpleSupportedVSCurrencies() (*types.SimpleSupportedVSCurrencies, error) {
-	url := fmt.Sprintf("%s/simple/supported_vs_currencies", baseURL)
+	url := fmt.Sprintf("%s/simple/supported_vs_currencies", c.baseURL)
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -134,7 +174,7 @@ func (c *Client) SimpleSupportedVSCurrencies() (*types.SimpleSupportedVSCurrenci
 
 // CoinsList /coins/list
 func (c *Client) CoinsList() (*types.CoinList, error) {
-	url := fmt.Sprintf("%s/coins/list", baseURL)
+	url := fmt.Sprintf("%s/coins/list", c.baseURL)
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -179,7 +219,7 @@ func (c *Client) CoinsMarket(vsCurrency string, ids []string, order string, perP
 		priceChangePercentageParam := strings.Join(priceChangePercentage[:], ",")
 		params.Add("price_change_percentage", priceChangePercentageParam)
 	}
-	url := fmt.Sprintf("%s/coins/markets?%s", baseURL, params.Encode())
+	url := fmt.Sprintf("%s/coins/markets?%s", c.baseURL, params.Encode())
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -205,7 +245,7 @@ func (c *Client) CoinsID(id string, localization bool, tickers bool, marketData 
 	params.Add("community_data", format.Bool2String(communityData))
 	params.Add("developer_data", format.Bool2String(developerData))
 	params.Add("sparkline", format.Bool2String(sparkline))
-	url := fmt.Sprintf("%s/coins/%s?%s", baseURL, id, params.Encode())
+	url := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, id, params.Encode())
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -228,7 +268,7 @@ func (c *Client) CoinsIDTickers(id string, page int) (*types.CoinsIDTickers, err
 	if page > 0 {
 		params.Add("page", format.Int2String(page))
 	}
-	url := fmt.Sprintf("%s/coins/%s/tickers?%s", baseURL, id, params.Encode())
+	url := fmt.Sprintf("%s/coins/%s/tickers?%s", c.baseURL, id, params.Encode())
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -250,7 +290,7 @@ func (c *Client) CoinsIDHistory(id string, date string, localization bool) (*typ
 	params.Add("date", date)
 	params.Add("localization", format.Bool2String(localization))
 
-	url := fmt.Sprintf("%s/coins/%s/history?%s", baseURL, id, params.Encode())
+	url := fmt.Sprintf("%s/coins/%s/history?%s", c.baseURL, id, params.Encode())
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -273,7 +313,7 @@ func (c *Client) CoinsIDMarketChart(id string, vs_currency string, days string) 
 	params.Add("vs_currency", vs_currency)
 	params.Add("days", days)
 
-	url := fmt.Sprintf("%s/coins/%s/market_chart?%s", baseURL, id, params.Encode())
+	url := fmt.Sprintf("%s/coins/%s/market_chart?%s", c.baseURL, id, params.Encode())
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -292,48 +332,16 @@ func (c *Client) CoinsIDMarketChart(id string, vs_currency string, days string) 
 
 // CoinsIDContractAddress https://api.coingecko.com/api/v3/coins/{id}/contract/{contract_address}
 // func CoinsIDContractAddress(id string, address string) (nil, error) {
-// 	url := fmt.Sprintf("%s/coins/%s/contract/%s", baseURL, id, address)
+// 	url := fmt.Sprintf("%s/coins/%s/contract/%s", c.baseURL, id, address)
 // 	resp, err := request.MakeReq(url)
 // 	if err != nil {
 // 		return nil, err
 // 	}
 // }
 
-// EventsCountries https://api.coingecko.com/api/v3/events/countries
-func (c *Client) EventsCountries() ([]types.EventCountryItem, error) {
-	url := fmt.Sprintf("%s/events/countries", baseURL)
-	resp, err := c.MakeReq(url)
-	if err != nil {
-		return nil, err
-	}
-	var data *types.EventsCountries
-	err = json.Unmarshal(resp, &data)
-	if err != nil {
-		return nil, err
-	}
-	return data.Data, nil
-
-}
-
-// EventsTypes https://api.coingecko.com/api/v3/events/types
-func (c *Client) EventsTypes() (*types.EventsTypes, error) {
-	url := fmt.Sprintf("%s/events/types", baseURL)
-	resp, err := c.MakeReq(url)
-	if err != nil {
-		return nil, err
-	}
-	var data *types.EventsTypes
-	err = json.Unmarshal(resp, &data)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-
-}
-
 // ExchangeRates https://api.coingecko.com/api/v3/exchange_rates
 func (c *Client) ExchangeRates() (*types.ExchangeRatesItem, error) {
-	url := fmt.Sprintf("%s/exchange_rates", baseURL)
+	url := fmt.Sprintf("%s/exchange_rates", c.baseURL)
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
@@ -348,7 +356,7 @@ func (c *Client) ExchangeRates() (*types.ExchangeRatesItem, error) {
 
 // Global https://api.coingecko.com/api/v3/global
 func (c *Client) Global() (*types.Global, error) {
-	url := fmt.Sprintf("%s/global", baseURL)
+	url := fmt.Sprintf("%s/global", c.baseURL)
 	resp, err := c.MakeReq(url)
 	if err != nil {
 		return nil, err
