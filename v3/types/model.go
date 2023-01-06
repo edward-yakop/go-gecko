@@ -69,7 +69,7 @@ type DescriptionItem map[string]string
 type LinksItem map[string]interface{}
 
 // ChartItem
-type ChartItem [2]float32
+type ChartItem [2]float64
 
 // MarketDataItem map all market data item
 type MarketDataItem struct {
@@ -257,7 +257,7 @@ type Global struct {
 	UpcomingICOs                    uint16        `json:"upcoming_icos"`
 	EndedICOs                       uint16        `json:"ended_icos"`
 	Markets                         uint16        `json:"markets"`
-	MarketCapChangePercentage24hUSD float32       `json:"market_cap_change_percentage_24h_usd"`
+	MarketCapChangePercentage24hUSD float64       `json:"market_cap_change_percentage_24h_usd"`
 	TotalMarketCap                  AllCurrencies `json:"total_market_cap"`
 	TotalVolume                     AllCurrencies `json:"total_volume"`
 	MarketCapPercentage             AllCurrencies `json:"market_cap_percentage"`

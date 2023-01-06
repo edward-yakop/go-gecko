@@ -1,6 +1,9 @@
 package format
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestBool2String(t *testing.T) {
 	type args struct {
@@ -16,9 +19,9 @@ func TestBool2String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Bool2String(tt.args.b); got != tt.want {
-				t.Errorf("Bool2String() = %v, want %v", got, tt.want)
-			}
+			got := Bool2String(tt.args.b)
+
+			assert.Equalf(t, tt.want, got, "Bool2String(%v)", tt.args.b)
 		})
 	}
 }
@@ -37,9 +40,9 @@ func TestInt2String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Int2String(tt.args.i); got != tt.want {
-				t.Errorf("Int2String() = %v, want %v", got, tt.want)
-			}
+			got := Int2String(tt.args.i)
+
+			assert.Equalf(t, tt.want, got, "Int2String(%v)", tt.args.i)
 		})
 	}
 }

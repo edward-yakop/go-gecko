@@ -9,7 +9,7 @@ type Ping struct {
 type SimpleSinglePrice struct {
 	ID          string
 	Currency    string
-	MarketPrice float32
+	MarketPrice float64
 }
 
 // SimpleSupportedVSCurrencies https://api.coingecko.com/api/v3/simple/supported_vs_currencies
@@ -34,11 +34,11 @@ type CoinsID struct {
 	GenesisDate         string              `json:"genesis_date"`
 	MarketCapRank       uint16              `json:"market_cap_rank"`
 	CoinGeckoRank       uint16              `json:"coingecko_rank"`
-	CoinGeckoScore      float32             `json:"coingecko_score"`
-	DeveloperScore      float32             `json:"developer_score"`
-	CommunityScore      float32             `json:"community_score"`
-	LiquidityScore      float32             `json:"liquidity_score"`
-	PublicInterestScore float32             `json:"public_interest_score"`
+	CoinGeckoScore      float64             `json:"coingecko_score"`
+	DeveloperScore      float64             `json:"developer_score"`
+	CommunityScore      float64             `json:"community_score"`
+	LiquidityScore      float64             `json:"liquidity_score"`
+	PublicInterestScore float64             `json:"public_interest_score"`
 	MarketData          *MarketDataItem     `json:"market_data"`
 	CommunityData       *CommunityDataItem  `json:"community_data"`
 	DeveloperData       *DeveloperDataItem  `json:"developer_data"`
@@ -91,11 +91,11 @@ type CoinsIDMarketChart struct {
 // 	ContractAddress     string           `json:"contract_address"`
 // 	MarketCapRank       uint16           `json:"market_cap_rank"`
 // 	CoinGeckoRank       uint16           `json:"coingecko_rank"`
-// 	CoinGeckoScore      float32          `json:"coingecko_score"`
-// 	DeveloperScore      float32          `json:"developer_score"`
-// 	CommunityScore      float32          `json:"community_score"`
-// 	LiquidityScore      float32          `json:"liquidity_score"`
-// 	PublicInterestScore float32          `json:"public_interest_score"`
+// 	CoinGeckoScore      float64          `json:"coingecko_score"`
+// 	DeveloperScore      float64          `json:"developer_score"`
+// 	CommunityScore      float64          `json:"community_score"`
+// 	LiquidityScore      float64          `json:"liquidity_score"`
+// 	PublicInterestScore float64          `json:"public_interest_score"`
 // 	MarketData          `json:"market_data"`
 // }
 
