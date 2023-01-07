@@ -44,9 +44,9 @@ type CoinsID struct {
 	CommunityData       *CommunityDataItem  `json:"community_data"`
 	DeveloperData       *DeveloperDataItem  `json:"developer_data"`
 	PublicInterestStats *PublicInterestItem `json:"public_interest_stats"`
-	StatusUpdates       *[]StatusUpdateItem `json:"status_updates"`
+	StatusUpdates       []StatusUpdateItem  `json:"status_updates"`
 	LastUpdated         string              `json:"last_updated"`
-	Tickers             *[]TickerItem       `json:"tickers"`
+	Tickers             []TickerItem        `json:"tickers"`
 }
 
 // CoinsIDTickers https://api.coingecko.com/api/v3/coins/steem/tickers?page=1

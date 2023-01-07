@@ -2,18 +2,18 @@ package types
 
 // OrderType
 
-type CoinsOrderType int
+type CoinsMarketOrder int
 
 const (
-	CoinsOrderTypeMarketCapDesc = iota
-	CoinsOrderTypeMarketCapAsc
-	CoinsOrderTypeGeckoDesc
-	CoinsOrderTypeGeckoAsc
-	CoinsOrderTypeVolumeAsc
-	CoinsOrderTypeVolumeDesc
+	CoinMarketOrderMarketCapDesc = iota
+	CoinMarketOrderMarketCapAsc
+	CoinMarketOrderGeckoDesc
+	CoinMarketOrderGeckoAsc
+	CoinMarketOrderVolumeAsc
+	CoinMarketOrderVolumeDesc
 )
 
-func (d CoinsOrderType) String() string {
+func (cmo CoinsMarketOrder) String() string {
 	return []string{
 		"market_cap_desc",
 		"market_cap_asc",
@@ -21,7 +21,7 @@ func (d CoinsOrderType) String() string {
 		"gecko_asc",
 		"volume_asc",
 		"volume_desc",
-	}[d]
+	}[cmo]
 }
 
 // PriceChangePercentage
@@ -38,7 +38,7 @@ const (
 	PriceChangePercentage1Y
 )
 
-func (d PriceChangePercentage) String() string {
+func (pcp PriceChangePercentage) String() string {
 	return []string{
 		"1h",
 		"24h",
@@ -47,7 +47,23 @@ func (d PriceChangePercentage) String() string {
 		"30d",
 		"200d",
 		"1y",
-	}[d]
+	}[pcp]
+}
+
+type CoinTickerOrder int
+
+const (
+	CoinTickerOrderTrustScoreDesc = iota
+	CoinTickerOrderTrustScoreAsc
+	CoinTickerOrderVolumeDesc
+)
+
+func (cto CoinTickerOrder) String() string {
+	return []string{
+		"trust_score_desc",
+		"trust_score_asc",
+		"volume_desc",
+	}[cto]
 }
 
 // SHARED
@@ -174,15 +190,20 @@ type TickerItem struct {
 		Identifier       string `json:"identifier"`
 		TradingIncentive bool   `json:"has_trading_incentive"`
 	} `json:"market"`
+	Last                   float64            `json:"last"`
+	Volume                 float64            `json:"volume"`
+	CostToMoveUpUsd        *float64           `json:"cost_to_move_up_usd"`
+	CostToMoveDownUsd      *float64           `json:"cost_to_move_down_usd"`
+	ConvertedLast          map[string]float64 `json:"converted_last"`
+	ConvertedVolume        map[string]float64 `json:"converted_volume"`
 	TrustScore             string             `json:"trust_score"`
 	BidAskSpreadPercentage float64            `json:"bid_ask_spread_percentage"`
-	Last                   float64            `json:"last"`
-	ConvertedLast          map[string]float64 `json:"converted_last"`
-	Volume                 float64            `json:"volume"`
-	ConvertedVolume        map[string]float64 `json:"converted_volume"`
 	Timestamp              string             `json:"timestamp"`
+	LastTradedAt           string             `json:"last_traded_at"`
+	LastFetchAt            string             `json:"last_fetch_at"`
 	IsAnomaly              bool               `json:"is_anomaly"`
 	IsStale                bool               `json:"is_stale"`
+	TradeUrl               string             `json:"trade_url"`
 	CoinID                 string             `json:"coin_id"`
 	TargetCoinId           string             `json:"target_coin_id,omitempty"`
 }

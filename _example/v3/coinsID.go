@@ -10,7 +10,7 @@ import (
 func main() {
 	cg := gecko.NewClient(nil)
 	coin, err := cg.CoinsID(gecko.CoinsIDParams{
-		Id:            "dogecoin",
+		CoinID:        "dogecoin",
 		Localization:  true,
 		Tickers:       true,
 		MarketData:    true,

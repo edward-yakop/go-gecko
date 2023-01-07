@@ -26,13 +26,13 @@ func (c *Client) CoinsList() (*types.CoinList, error) {
 }
 
 type CoinsMarketParams struct {
-	VsCurrency            string               // Required. The target currency of market data (usd, eur, jpy, etc.)
-	CoinIds               []string             // The ids of the coin, comma separated crytocurrency symbols (base). refers to /coins/list.
-	Category              string               // filter by coin category. Refer to /coin/categories/list
-	Order                 types.CoinsOrderType // When blank will be set to "market_cap_desc"
-	PageSize              int                  // Starts from 1 - 250, when invalid will be set to 100
-	PageNo                int                  // Starts from 1, when < 1, will be set to 1
-	Sparkline             bool                 // Include sparkline 7 days data (eg. true, false)
+	VsCurrency            string                 // Required. The target currency of market data (usd, eur, jpy, etc.)
+	CoinIds               []string               // The ids of the coin, comma separated crytocurrency symbols (base). refers to /coins/list.
+	Category              string                 // filter by coin category. Refer to /coin/categories/list
+	Order                 types.CoinsMarketOrder // When blank will be set to "market_cap_desc"
+	PageSize              int                    // Starts from 1 - 250, when invalid will be set to 100
+	PageNo                int                    // Starts from 1, when < 1, will be set to 1
+	Sparkline             bool                   // Include sparkline 7 days data (eg. true, false)
 	PriceChangePercentage []types.PriceChangePercentage
 }
 
@@ -51,7 +51,7 @@ func (p CoinsMarketParams) encodeQueryParams() string {
 
 	// order
 	if p.Order < 0 || p.Order > 5 {
-		p.Order = types.CoinsOrderTypeMarketCapDesc
+		p.Order = types.CoinMarketOrderMarketCapDesc
 	}
 	params.Add("order", p.Order.String())
 
@@ -116,17 +116,17 @@ func (c *Client) CoinsMarket(params CoinsMarketParams) (types.CoinsMarket, error
 }
 
 type CoinsIDParams struct {
-	Id            string
-	Localization  bool
-	Tickers       bool
-	MarketData    bool
-	CommunityData bool
-	DeveloperData bool
-	Sparkline     bool
+	CoinID        string // CoinID (can be obtained from /coins)
+	Localization  bool   // Include all localized languages in response
+	Tickers       bool   // Include tickers data. If true returns up to 100 entries. Use CoinsIDTickers
+	MarketData    bool   // Include market data
+	CommunityData bool   // Include community data
+	DeveloperData bool   // Include developer data
+	Sparkline     bool   // Include sparkline 7 days data
 }
 
 func (c CoinsIDParams) Validate() error {
-	if c.Id == "" {
+	if c.CoinID == "" {
 		return fmt.Errorf("id is required")
 	}
 
@@ -152,7 +152,7 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 		return nil, err
 	}
 
-	coinsURL := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, params.Id, params.encodeNonIdParams())
+	coinsURL := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, params.CoinID, params.encodeNonIdParams())
 	resp, err := c.makeHTTPRequest(coinsURL)
 	if err != nil {
 		return nil, err
@@ -166,18 +166,50 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 	return data, nil
 }
 
-// CoinsIDTickers /coins/{id}/tickers
-func (c *Client) CoinsIDTickers(id string, page int) (*types.CoinsIDTickers, error) {
-	if id == "" {
-		return nil, fmt.Errorf("id is required")
+type CoinsIDTickersParam struct {
+	CoinsID                string                // CoinID (can be obtained from /coins)
+	ExchangeIds            []string              // filter results by exchange_ids ExchangesList
+	IncludeExchangeLogo    bool                  // flag to show exchange logo
+	PageNo                 int                   // Page through results
+	Order                  types.CoinTickerOrder // If not set default to trust_score_desc
+	Show2PctOrderBookDepth bool                  // flag to show 2% order book depth
+}
+
+func (p CoinsIDTickersParam) Validate() error {
+	if p.CoinsID == "" {
+		return fmt.Errorf("CoinsID is required")
 	}
 
+	return nil
+}
+
+func (p CoinsIDTickersParam) encodeNonIdParams() string {
 	params := url.Values{}
-	if page > 0 {
-		params.Add("page", format.Int2String(page))
+
+	if len(p.ExchangeIds) > 0 {
+		params.Add("exchange_ids", strings.Join(p.ExchangeIds, ","))
 	}
 
-	coinsIDURL := fmt.Sprintf("%s/coins/%s/tickers?%s", c.baseURL, id, params.Encode())
+	params.Add("include_exchange_logo", format.Bool2String(p.IncludeExchangeLogo))
+
+	if p.PageNo < 1 {
+		p.PageNo = 1
+	}
+	params.Add("include_exchange_logo", format.Int2String(p.PageNo))
+
+	params.Add("order", p.Order.String())
+	params.Add("depth", format.Bool2String(p.Show2PctOrderBookDepth))
+
+	return params.Encode()
+}
+
+// CoinsIDTickers /coins/{id}/tickers
+func (c *Client) CoinsIDTickers(params CoinsIDTickersParam) (*types.CoinsIDTickers, error) {
+	if err := params.Validate(); err != nil {
+		return nil, err
+	}
+
+	coinsIDURL := fmt.Sprintf("%s/coins/%s/tickers?%s", c.baseURL, params.CoinsID, params.encodeNonIdParams())
 	resp, err := c.makeHTTPRequest(coinsIDURL)
 	if err != nil {
 		return nil, err

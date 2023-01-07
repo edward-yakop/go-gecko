@@ -9,11 +9,18 @@ import (
 
 func main() {
 	cg := gecko.NewClient(nil)
-	tickers, err := cg.CoinsIDTickers("bitcoin", 0)
+
+	tickers, err := cg.CoinsIDTickers(gecko.CoinsIDTickersParam{
+		CoinsID: "bitcoin",
+		PageNo:  1,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(len(tickers.Tickers))
-	tickers, err = cg.CoinsIDTickers("bitcoin", 1)
+	tickers, err = cg.CoinsIDTickers(gecko.CoinsIDTickersParam{
+		CoinsID: "bitcoin",
+		PageNo:  2,
+	})
 	fmt.Println(len(tickers.Tickers))
 }

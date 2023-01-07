@@ -25,7 +25,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 	market, err := c.CoinsMarket(CoinsMarketParams{
 		VsCurrency: "usd",
 		CoinIds:    []string{"bitcoin", "ethereum", "steem"},
-		Order:      types.CoinsOrderTypeVolumeDesc,
+		Order:      types.CoinMarketOrderVolumeDesc,
 		PageSize:   10,
 		PageNo:     1,
 		PriceChangePercentage: []types.PriceChangePercentage{
@@ -71,7 +71,7 @@ func TestCoinsID(t *testing.T) {
 	require.NoError(t, err)
 
 	coin, err := c.CoinsID(CoinsIDParams{
-		Id:            "dogecoin",
+		CoinID:        "dogecoin",
 		Localization:  true,
 		Tickers:       true,
 		MarketData:    true,
@@ -94,6 +94,37 @@ func TestCoinsID(t *testing.T) {
 	assert.Equal(t, "2013-12-08", coin.GenesisDate, "coin.GenesisDate")
 	assert.Equal(t, 8, int(coin.MarketCapRank), "coin.MarketCapRank")
 	assert.Equal(t, 6, int(coin.CoinGeckoRank), "coin.CoinGeckoRank")
+}
+
+func TestClient_CoinsIDTickers(t *testing.T) {
+	err := setupGock("json/coins_id_tickers.json", "/coins/bitcoin/tickers")
+	require.NoError(t, err)
+
+	coinsIDTickers, err := c.CoinsIDTickers(CoinsIDTickersParam{
+		CoinsID:                "bitcoin",
+		PageNo:                 1,
+		IncludeExchangeLogo:    true,
+		Order:                  types.CoinTickerOrderVolumeDesc,
+		Show2PctOrderBookDepth: true,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, coinsIDTickers)
+
+	tickers := coinsIDTickers.Tickers
+	require.Len(t, tickers, 100)
+
+	first := tickers[0]
+	assert.Equal(t, "binance", first.Market.Identifier, "tickers[0].Market.Identifier")
+	assert.Equal(t, 16923.83, first.Last, "tickers[0].Last")
+	assert.Equal(t, 178831.36767623396, first.Volume, "tickers[0].Volume")
+	assert.Equal(t, 20584847.5882314, *first.CostToMoveUpUsd, "tickers[0].CostToMoveUpUsd")
+	assert.Equal(t, 22770501.2269016, *first.CostToMoveDownUsd, "tickers[0].CostToMoveDownUsd")
+	assert.Equal(t, "green", first.TrustScore, "tickers[0].TrustScore")
+	assert.Equal(t, 0.010768, first.BidAskSpreadPercentage, "tickers[0].BidAskSpreadPercentage")
+	assert.Equal(t, false, first.IsAnomaly, "tickers[0].IsAnomaly")
+	assert.Equal(t, false, first.IsStale, "tickers[0].IsStale")
+	assert.Equal(t, "bitcoin", first.CoinID, "tickers[0].CoinID")
+	assert.Equal(t, "tether", first.TargetCoinId, "tickers[0].TargetCoinId")
 }
 
 func TestClient_CoinsIDHistory(t *testing.T) {
