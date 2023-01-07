@@ -149,3 +149,21 @@ func TestClient_CoinsIDHistory(t *testing.T) {
 	assert.Equal(t, 4231416, int(*history.CommunityData.TwitterFollowers), "history.CommunityData.TwitterFollowers")
 	assert.Equal(t, 31111, int(*history.DeveloperData.Forks), "history.DeveloperData.Forks")
 }
+
+func TestClient_CoinsIDMarketChart(t *testing.T) {
+	err := setupGock("json/coins_id_market_chart.json", "/coins/bitcoin/market_chart")
+	require.NoError(t, err)
+
+	mc, err := c.CoinsIDMarketChart(CoinsIDMarketChartParams{
+		CoinsID:    "bitcoin",
+		VsCurrency: "usd",
+		Days:       "1",
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, mc)
+
+	assert.Len(t, mc.Prices, 290, "mc.Prices")
+	assert.Len(t, mc.MarketCaps, 290, "mc.MarketCaps")
+	assert.Len(t, mc.TotalVolumes, 290, "mc.TotalVolumes")
+}

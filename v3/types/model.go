@@ -1,5 +1,10 @@
 package types
 
+import (
+	"encoding/json"
+	"time"
+)
+
 // OrderType
 
 type CoinsMarketOrder int
@@ -89,7 +94,23 @@ type DescriptionItem map[string]string
 type LinksItem map[string]interface{}
 
 // ChartItem
-type ChartItem [2]float64
+
+type ChartItem struct {
+	Time  time.Time
+	Value float64
+}
+
+func (ci *ChartItem) UnmarshalJSON(data []byte) error {
+	var content [2]float64
+	if err := json.Unmarshal(data, &content); err != nil {
+		return err
+	}
+
+	ci.Time = time.Unix(0, int64(content[0])*int64(time.Millisecond))
+	ci.Value = content[1]
+
+	return nil
+}
 
 // MarketDataItem map all market data item
 type MarketDataItem struct {

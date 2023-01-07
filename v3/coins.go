@@ -270,25 +270,44 @@ func (c *Client) CoinsIDHistory(params CoinsIDHistoryParams) (*types.CoinsIDHist
 	return data, nil
 }
 
-// CoinsIDMarketChart /coins/{id}/market_chart?vs_currency={usd, eur, jpy, etc.}&days={1,14,30,max}
-func (c *Client) CoinsIDMarketChart(id string, vsCurrency string, days string) (*types.CoinsIDMarketChart, error) {
-	if id == "" {
-		return nil, fmt.Errorf("id is required")
+type CoinsIDMarketChartParams struct {
+	CoinsID    string // CoinID (can be obtained from /coins)
+	VsCurrency string // The target currency of market data (usd, eur, jpy, etc.)
+	Days       string // Data up to number of days ago (eg. 1,14,30,max)
+}
+
+func (p CoinsIDMarketChartParams) Validate() error {
+	if p.CoinsID == "" {
+		return fmt.Errorf("CoinsID is required")
 	}
 
-	if vsCurrency == "" {
-		return nil, fmt.Errorf("vsCurrency is required")
+	if p.VsCurrency == "" {
+		return fmt.Errorf("VsCurrency is required")
 	}
 
-	if days == "" {
-		return nil, fmt.Errorf("days is required")
+	if p.Days == "" {
+		return fmt.Errorf("Days is required")
 	}
 
+	return nil
+}
+
+func (p CoinsIDMarketChartParams) encodeNonIDQueryParams() string {
 	params := url.Values{}
-	params.Add("vs_currency", vsCurrency)
-	params.Add("days", days)
 
-	coinsIDMarketChartURL := fmt.Sprintf("%s/coins/%s/market_chart?%s", c.baseURL, id, params.Encode())
+	params.Add("vs_currency", p.VsCurrency)
+	params.Add("days", p.Days)
+
+	return params.Encode()
+}
+
+// CoinsIDMarketChart /coins/{id}/market_chart?vs_currency={usd, eur, jpy, etc.}&days={1,14,30,max}
+func (c *Client) CoinsIDMarketChart(params CoinsIDMarketChartParams) (*types.CoinsIDMarketChart, error) {
+	if err := params.Validate(); err != nil {
+		return nil, err
+	}
+
+	coinsIDMarketChartURL := fmt.Sprintf("%s/coins/%s/market_chart?%s", c.baseURL, params.CoinsID, params.encodeNonIDQueryParams())
 	resp, err := c.makeHTTPRequest(coinsIDMarketChartURL)
 	if err != nil {
 		return nil, err
