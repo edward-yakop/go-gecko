@@ -21,11 +21,10 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 | /simple/supported_vs_currencies |  [/]   |   [/]   |  SimpleSupportedVSCurrencies   |
 |           /coins/list           |  [/]   |   [/]   |           CoinsList            |
 |          /coins/market          |  [/]   |   [/]   |          CoinsMarket           |
-|           /coins/{id}           |  [/]   |         |            CoinsID             |
-|       /coins/{id}/history       |  [/]   |         |         CoinsIDHistory         |
+|           /coins/{id}           |  [/]   |   [/]   |            CoinsID             |
+|       /coins/{id}/tickers       |  [/]   |   [/]   |         CoinsIDTickers         |
+|       /coins/{id}/history       |  [/]   |   [/]   |         CoinsIDHistory         |
 |    /coins/{id}/market_chart     |  [/]   |         |       CoinsIDMarketChart       |
-|        /events/countries        |  [/]   |         |        EventsCountries         |
-|          /events/types          |  [/]   |         |           EventsType           |
 |         /exchange_rates         |  [/]   |         |          ExchangeRate          |
 |             /global             |  [/]   |         |             Global             |
 

@@ -131,7 +131,11 @@ func TestClient_CoinsIDHistory(t *testing.T) {
 	err := setupGock("json/coins_id_history.json", "/coins/bitcoin/history")
 	require.NoError(t, err)
 
-	history, err := c.CoinsIDHistory("bitcoin", "06-01-2022", true)
+	history, err := c.CoinsIDHistory(CoinsIDHistoryParams{
+		CoinID:                "bitcoin",
+		SnapshotDate:          "06-01-2022",
+		IsIncludeLocalization: true,
+	})
 	require.NoError(t, err)
 	require.NotNil(t, history)
 

@@ -133,7 +133,7 @@ func (c CoinsIDParams) Validate() error {
 	return nil
 }
 
-func (c CoinsIDParams) encodeNonIdParams() string {
+func (c CoinsIDParams) encodeNonIDQueryParams() string {
 	params := url.Values{}
 
 	params.Add("localization", format.Bool2String(c.Localization))
@@ -152,7 +152,7 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 		return nil, err
 	}
 
-	coinsURL := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, params.CoinID, params.encodeNonIdParams())
+	coinsURL := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, params.CoinID, params.encodeNonIDQueryParams())
 	resp, err := c.makeHTTPRequest(coinsURL)
 	if err != nil {
 		return nil, err
@@ -183,7 +183,7 @@ func (p CoinsIDTickersParam) Validate() error {
 	return nil
 }
 
-func (p CoinsIDTickersParam) encodeNonIdParams() string {
+func (p CoinsIDTickersParam) encodeNonIDQueryParams() string {
 	params := url.Values{}
 
 	if len(p.ExchangeIds) > 0 {
@@ -209,7 +209,7 @@ func (c *Client) CoinsIDTickers(params CoinsIDTickersParam) (*types.CoinsIDTicke
 		return nil, err
 	}
 
-	coinsIDURL := fmt.Sprintf("%s/coins/%s/tickers?%s", c.baseURL, params.CoinsID, params.encodeNonIdParams())
+	coinsIDURL := fmt.Sprintf("%s/coins/%s/tickers?%s", c.baseURL, params.CoinsID, params.encodeNonIDQueryParams())
 	resp, err := c.makeHTTPRequest(coinsIDURL)
 	if err != nil {
 		return nil, err
@@ -223,21 +223,40 @@ func (c *Client) CoinsIDTickers(params CoinsIDTickersParam) (*types.CoinsIDTicke
 	return data, nil
 }
 
-// CoinsIDHistory /coins/{id}/history?date={date}&localization=false
-func (c *Client) CoinsIDHistory(id string, date string, localization bool) (*types.CoinsIDHistory, error) {
-	if id == "" {
-		return nil, fmt.Errorf("id is required")
+type CoinsIDHistoryParams struct {
+	CoinID                string // CoinID (can be obtained from /coins)
+	SnapshotDate          string // The date of data snapshot in dd-mm-yyyy eg. 30-12-2017
+	IsIncludeLocalization bool   // Set to false to exclude localized languages in response
+}
+
+func (p CoinsIDHistoryParams) Validate() error {
+	if p.CoinID == "" {
+		return fmt.Errorf("CoinID is required")
 	}
 
-	if date == "" {
-		return nil, fmt.Errorf("date is required")
+	if p.SnapshotDate == "" {
+		return fmt.Errorf("SnapshotDate is required")
 	}
 
+	return nil
+}
+
+func (p CoinsIDHistoryParams) encodeNonIDQueryParams() string {
 	params := url.Values{}
-	params.Add("date", date)
-	params.Add("localization", format.Bool2String(localization))
 
-	coinsIDHistoryURL := fmt.Sprintf("%s/coins/%s/history?%s", c.baseURL, id, params.Encode())
+	params.Add("date", p.SnapshotDate)
+	params.Add("localization", format.Bool2String(p.IsIncludeLocalization))
+
+	return params.Encode()
+}
+
+// CoinsIDHistory /coins/{id}/history?date={date}&localization=false
+func (c *Client) CoinsIDHistory(params CoinsIDHistoryParams) (*types.CoinsIDHistory, error) {
+	if err := params.Validate(); err != nil {
+		return nil, err
+	}
+
+	coinsIDHistoryURL := fmt.Sprintf("%s/coins/%s/history?%s", c.baseURL, params.CoinID, params.encodeNonIDQueryParams())
 	resp, err := c.makeHTTPRequest(coinsIDHistoryURL)
 	if err != nil {
 		return nil, err

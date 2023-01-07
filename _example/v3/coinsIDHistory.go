@@ -9,9 +9,14 @@ import (
 
 func main() {
 	cg := gecko.NewClient(nil)
-	btc, err := cg.CoinsIDHistory("bitcoin", "30-12-2018", true)
+	btc, err := cg.CoinsIDHistory(gecko.CoinsIDHistoryParams{
+		CoinID:                "bitcoin",
+		SnapshotDate:          "30-12-2018",
+		IsIncludeLocalization: true,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println(*btc)
 }
