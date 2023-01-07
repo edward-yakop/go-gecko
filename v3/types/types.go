@@ -25,6 +25,7 @@ type CoinsMarket []CoinsMarketItem
 type CoinsID struct {
 	coinBaseStruct
 	BlockTimeInMin      int32               `json:"block_time_in_minutes"`
+	HashingAlgorithm    string              `json:"hashing_algorithm"`
 	Categories          []string            `json:"categories"`
 	Localization        LocalizationItem    `json:"localization"`
 	Description         DescriptionItem     `json:"description"`
@@ -57,12 +58,18 @@ type CoinsIDTickers struct {
 // CoinsIDHistory https://api.coingecko.com/api/v3/coins/steem/history?date=30-12-2018
 type CoinsIDHistory struct {
 	coinBaseStruct
-	Localization   LocalizationItem    `json:"localization"`
-	Image          ImageItem           `json:"image"`
-	MarketData     *MarketDataItem     `json:"market_data"`
-	CommunityData  *CommunityDataItem  `json:"community_data"`
-	DeveloperData  *DeveloperDataItem  `json:"developer_data"`
-	PublicInterest *PublicInterestItem `json:"public_interest_stats"`
+	Localization   LocalizationItem             `json:"localization"`
+	Image          ImageItem                    `json:"image"`
+	MarketData     *CoinIDHistoryMarketDataItem `json:"market_data"`
+	CommunityData  *CommunityDataItem           `json:"community_data"`
+	DeveloperData  *DeveloperDataItem           `json:"developer_data"`
+	PublicInterest *PublicInterestItem          `json:"public_interest_stats"`
+}
+
+type CoinIDHistoryMarketDataItem struct {
+	CurrentPrice map[string]float64 `json:"current_price"`
+	MarketCap    map[string]float64 `json:"market_cap"`
+	TotalVolume  map[string]float64 `json:"total_volume"`
 }
 
 // CoinsIDMarketChart https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1
