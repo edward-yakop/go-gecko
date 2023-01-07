@@ -1,4 +1,4 @@
-module github.com/superoo7/go-gecko
+module github.com/edward-yakop/go-gecko
 
 go 1.19
 

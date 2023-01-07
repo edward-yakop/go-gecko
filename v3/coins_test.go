@@ -1,9 +1,9 @@
 package coingecko
 
 import (
+	"github.com/edward-yakop/go-gecko/v3/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/superoo7/go-gecko/v3/types"
 	"testing"
 )
 

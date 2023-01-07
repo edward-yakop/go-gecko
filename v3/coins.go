@@ -3,8 +3,8 @@ package coingecko
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/superoo7/go-gecko/format"
-	"github.com/superoo7/go-gecko/v3/types"
+	"github.com/edward-yakop/go-gecko/format"
+	"github.com/edward-yakop/go-gecko/v3/types"
 	"net/url"
 	"strings"
 )
