@@ -9,9 +9,19 @@ import (
 
 func main() {
 	cg := gecko.NewClient(nil)
-	coin, err := cg.CoinsID("dogecoin", true, true, true, true, true, true)
+	coin, err := cg.CoinsID(gecko.CoinsIDParams{
+		Id:            "dogecoin",
+		Localization:  true,
+		Tickers:       true,
+		MarketData:    true,
+		CommunityData: true,
+		DeveloperData: true,
+		Sparkline:     true,
+	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println(coin)
 }

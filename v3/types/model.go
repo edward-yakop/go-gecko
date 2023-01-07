@@ -2,48 +2,52 @@ package types
 
 // OrderType
 
-// OrderType in CoinGecko
-type OrderType struct {
-	MarketCapDesc string
-	MarketCapAsc  string
-	GeckoDesc     string
-	GeckoAsc      string
-	VolumeAsc     string
-	VolumeDesc    string
-}
+type CoinsOrderType int
 
-// OrderTypeObject for certain order
-var OrderTypeObject = &OrderType{
-	MarketCapDesc: "market_cap_desc",
-	MarketCapAsc:  "market_cap_asc",
-	GeckoDesc:     "gecko_desc",
-	GeckoAsc:      "gecko_asc",
-	VolumeAsc:     "volume_asc",
-	VolumeDesc:    "volume_desc",
+const (
+	CoinsOrderTypeMarketCapDesc = iota
+	CoinsOrderTypeMarketCapAsc
+	CoinsOrderTypeGeckoDesc
+	CoinsOrderTypeGeckoAsc
+	CoinsOrderTypeVolumeAsc
+	CoinsOrderTypeVolumeDesc
+)
+
+func (d CoinsOrderType) String() string {
+	return []string{
+		"market_cap_desc",
+		"market_cap_asc",
+		"gecko_desc",
+		"gecko_asc",
+		"volume_asc",
+		"volume_desc",
+	}[d]
 }
 
 // PriceChangePercentage
 
-// PriceChangePercentage in different amount of time
-type PriceChangePercentage struct {
-	PCP1h   string
-	PCP24h  string
-	PCP7d   string
-	PCP14d  string
-	PCP30d  string
-	PCP200d string
-	PCP1y   string
-}
+type PriceChangePercentage int
 
-// PriceChangePercentageObject for different amount of time
-var PriceChangePercentageObject = &PriceChangePercentage{
-	PCP1h:   "1h",
-	PCP24h:  "24h",
-	PCP7d:   "7d",
-	PCP14d:  "14d",
-	PCP30d:  "30d",
-	PCP200d: "200d",
-	PCP1y:   "1y",
+const (
+	PriceChangePercentage1H = iota
+	PriceChangePercentage24H
+	PriceChangePercentage7D
+	PriceChangePercentage14D
+	PriceChangePercentage30D
+	PriceChangePercentage200D
+	PriceChangePercentage1Y
+)
+
+func (d PriceChangePercentage) String() string {
+	return []string{
+		"1h",
+		"24h",
+		"7d",
+		"14d",
+		"30d",
+		"200d",
+		"1y",
+	}[d]
 }
 
 // SHARED
@@ -209,7 +213,7 @@ type CoinsMarketItem struct {
 	Image                               string         `json:"image"`
 	CurrentPrice                        float64        `json:"current_price"`
 	MarketCap                           float64        `json:"market_cap"`
-	MarketCapRank                       int16          `json:"market_cap_rank"`
+	MarketCapRank                       int            `json:"market_cap_rank"`
 	TotalVolume                         float64        `json:"total_volume"`
 	High24                              float64        `json:"high_24h"`
 	Low24                               float64        `json:"low_24h"`

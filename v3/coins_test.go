@@ -3,6 +3,7 @@ package coingecko
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/superoo7/go-gecko/v3/types"
 	"testing"
 )
 
@@ -17,11 +18,67 @@ func TestCoinsList(t *testing.T) {
 	assert.Equal(t, "01coin", item.ID, "item.ID")
 }
 
+func TestClient_CoinsMarket(t *testing.T) {
+	err := setupGock("json/coins_market.json", "/coins/markets")
+	require.NoError(t, err)
+
+	market, err := c.CoinsMarket(CoinsMarketParams{
+		VsCurrency: "usd",
+		CoinIds:    []string{"bitcoin", "ethereum", "steem"},
+		Order:      types.CoinsOrderTypeVolumeDesc,
+		PageSize:   10,
+		PageNo:     1,
+		PriceChangePercentage: []types.PriceChangePercentage{
+			types.PriceChangePercentage1H,
+			types.PriceChangePercentage24H,
+			types.PriceChangePercentage7D,
+			types.PriceChangePercentage14D,
+			types.PriceChangePercentage30D,
+			types.PriceChangePercentage200D,
+			types.PriceChangePercentage1Y,
+		},
+	})
+	require.NoError(t, err)
+	require.Len(t, market, 3)
+
+	if btc := market[0]; assert.Equal(t, "bitcoin", btc.ID, "market[0].ID") {
+		assert.Equal(t, "btc", btc.Symbol)
+		assert.Equal(t, "Bitcoin EY", btc.Name)
+		assert.Equal(t, 16919.92, btc.CurrentPrice)
+		assert.Equal(t, 325774667477, int(btc.MarketCap))
+		assert.Equal(t, 1, btc.MarketCapRank)
+	}
+
+	if eth := market[1]; assert.Equal(t, "ethereum", eth.ID, "market[1].ID") {
+		assert.Equal(t, "eth", eth.Symbol)
+		assert.Equal(t, "Ethereum EY", eth.Name)
+		assert.Equal(t, 1263.96, eth.CurrentPrice)
+		assert.Equal(t, 152320057898, int(eth.MarketCap))
+		assert.Equal(t, 2, eth.MarketCapRank)
+	}
+
+	if steem := market[2]; assert.Equal(t, "steem", steem.ID, "market[2].ID") {
+		assert.Equal(t, "steem", steem.Symbol)
+		assert.Equal(t, "Steem EY", steem.Name)
+		assert.Equal(t, 0.150837, steem.CurrentPrice)
+		assert.Equal(t, 63951772, int(steem.MarketCap))
+		assert.Equal(t, 298, steem.MarketCapRank)
+	}
+}
+
 func TestCoinsID(t *testing.T) {
 	err := setupGock("json/coins_id.json", "/coins/dogecoin")
 	require.NoError(t, err)
 
-	coin, err := c.CoinsID("dogecoin", true, true, true, true, true, true)
+	coin, err := c.CoinsID(CoinsIDParams{
+		Id:            "dogecoin",
+		Localization:  true,
+		Tickers:       true,
+		MarketData:    true,
+		CommunityData: true,
+		DeveloperData: true,
+		Sparkline:     true,
+	})
 	require.NoError(t, err)
 	require.NotNil(t, coin)
 

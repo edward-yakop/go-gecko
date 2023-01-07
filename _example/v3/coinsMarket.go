@@ -10,27 +10,41 @@ import (
 
 func main() {
 	cg := gecko.NewClient(nil)
-	// find specific coins
-	vsCurrency := "usd"
-	ids := []string{"bitcoin", "ethereum", "steem"}
-	perPage := 1
-	page := 1
-	sparkline := true
-	pcp := geckoTypes.PriceChangePercentageObject
-	priceChangePercentage := []string{pcp.PCP1h, pcp.PCP24h, pcp.PCP7d, pcp.PCP14d, pcp.PCP30d, pcp.PCP200d, pcp.PCP1y}
-	order := geckoTypes.OrderTypeObject.MarketCapDesc
-	market, err := cg.CoinsMarket(vsCurrency, ids, order, perPage, page, sparkline, priceChangePercentage)
+
+	priceChangePercentage := []geckoTypes.PriceChangePercentage{
+		geckoTypes.PriceChangePercentage1H,
+		geckoTypes.PriceChangePercentage24H,
+		geckoTypes.PriceChangePercentage7D,
+		geckoTypes.PriceChangePercentage14D,
+		geckoTypes.PriceChangePercentage30D,
+		geckoTypes.PriceChangePercentage200D,
+		geckoTypes.PriceChangePercentage1Y,
+	}
+
+	market, err := cg.CoinsMarket(gecko.CoinsMarketParams{
+		VsCurrency:            "usd",
+		CoinIds:               []string{"bitcoin", "ethereum", "steem"},
+		Order:                 geckoTypes.CoinsOrderTypeMarketCapDesc,
+		PageSize:              1,
+		PageNo:                1,
+		Sparkline:             true,
+		PriceChangePercentage: []geckoTypes.PriceChangePercentage{},
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Total coins: ", len(*market))
-	fmt.Println(*market)
+	fmt.Println("Total coins: ", len(market))
+	fmt.Println(market)
 
 	// with pagination instead
-	ids = []string{}
-	perPage = 10
-	page = 1
-	market, err = cg.CoinsMarket(vsCurrency, ids, order, perPage, page, sparkline, priceChangePercentage)
-	fmt.Println("Total coins: ", len(*market))
-	fmt.Println(*market)
+	market, err = cg.CoinsMarket(gecko.CoinsMarketParams{
+		VsCurrency:            "usd",
+		Order:                 geckoTypes.CoinsOrderTypeMarketCapDesc,
+		PageSize:              10,
+		PageNo:                1,
+		Sparkline:             true,
+		PriceChangePercentage: priceChangePercentage,
+	})
+	fmt.Println("Total coins: ", len(market))
+	fmt.Println(market)
 }
