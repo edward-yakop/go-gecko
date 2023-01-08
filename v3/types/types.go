@@ -105,15 +105,20 @@ type CoinsIDMarketChart struct {
 // 	MarketData          `json:"market_data"`
 // }
 
-// EventsCountries https://api.coingecko.com/api/v3/events/countries
-type EventsCountries struct {
-	Data []EventCountryItem `json:"data"`
-}
-
-// EventsTypes https://api.coingecko.com/api/v3/events/types
-type EventsTypes struct {
-	Data  []string `json:"data"`
-	Count uint16   `json:"count"`
+// Exchange https://api.coingecko.com/api/v3/exchanges
+type Exchange struct {
+	Id                          string  `json:"id"`
+	Name                        string  `json:"name"`
+	YearEstablished             *int    `json:"year_established"`
+	Country                     *string `json:"country"`
+	Description                 *string `json:"description"`
+	Url                         string  `json:"url"`
+	Image                       string  `json:"image"`
+	HasTradingIncentive         *bool   `json:"has_trading_incentive"`
+	TrustScore                  *int    `json:"trust_score"`
+	TrustScoreRank              *int    `json:"trust_score_rank"`
+	TradeVolume24HBtc           float64 `json:"trade_volume_24h_btc"`
+	TradeVolume24HBtcNormalized float64 `json:"trade_volume_24h_btc_normalized"`
 }
 
 // ExchangeRatesResponse https://api.coingecko.com/api/v3/exchange_rates
