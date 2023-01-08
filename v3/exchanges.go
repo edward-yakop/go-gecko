@@ -108,3 +108,23 @@ func (c *Client) ExchangesList() (map[string]string, error) {
 
 	return r, nil
 }
+
+func (c *Client) ExchangesID(exchangeID string) (*types.ExchangeDetail, error) {
+	if exchangeID == "" {
+		return nil, fmt.Errorf("exchangeID is required")
+	}
+
+	exchangesListURL := fmt.Sprintf("%s/exchanges/%s", c.baseURL, exchangeID)
+
+	resp, err := c.makeHTTPRequest(exchangesListURL)
+	if err != nil {
+		return nil, err
+	}
+
+	data := &types.ExchangeDetail{}
+	if err = json.Unmarshal(resp, data); err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}

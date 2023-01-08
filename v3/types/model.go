@@ -238,8 +238,9 @@ type StatusUpdateItem struct {
 	UserTitle   string `json:"user_title"`
 	Pin         bool   `json:"pin"`
 	Project     struct {
-		coinBaseStruct
 		Type  string    `json:"type"`
+		Id    string    `json:"id"`
+		Name  string    `json:"name"`
 		Image ImageItem `json:"image"`
 	} `json:"project"`
 }

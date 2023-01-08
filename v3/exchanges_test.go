@@ -42,3 +42,25 @@ func TestClient_ExchangesList(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, "Binance", binance)
 }
+
+func TestClient_ExchangesID(t *testing.T) {
+	err := setupGock("json/exchanges_id.json", "/exchanges/binance")
+	require.NoError(t, err)
+
+	got, err := c.ExchangesID("binance")
+	require.NoError(t, err)
+	require.NotNil(t, got)
+
+	assert.Equal(t, "Binance", got.Name, "got.Name")
+	assert.Equal(t, 2017, got.YearEstablished, "got.YearEstablished")
+	assert.Equal(t, "Cayman Islands", got.Country, "got.Country")
+	assert.Equal(t, "https://www.binance.com/", got.Url, "got.Url")
+	assert.Equal(t, false, got.HasTradingIncentive, "got.HasTradingIncentive")
+	assert.Equal(t, true, got.Centralized, "got.Centralized")
+	assert.Equal(t, 9, got.TrustScore, "got.TrustScore")
+	assert.Equal(t, 9, got.TrustScoreRank, "got.TrustScoreRank")
+	assert.Equal(t, 268336.72482915886, got.TradeVolume24HBtc, "got.TradeVolume24HBtc")
+	assert.Equal(t, 99259.77539045323, got.TradeVolume24HBtcNormalized, "got.TradeVolume24HBtcNormalized")
+	assert.Len(t, got.Tickers, 100, "len(got.Tickers)")
+	assert.Len(t, got.StatusUpdates, 7, "len(got.StatusUpdates)")
+}

@@ -121,6 +121,33 @@ type Exchange struct {
 	TradeVolume24HBtcNormalized float64 `json:"trade_volume_24h_btc_normalized"`
 }
 
+// ExchangeDetail https://api.coingecko.com/api/v3/exchanges/{id}
+type ExchangeDetail struct {
+	Name                        string             `json:"name"`
+	YearEstablished             int                `json:"year_established"`
+	Country                     string             `json:"country"`
+	Description                 string             `json:"description"`
+	Url                         string             `json:"url"`
+	Image                       string             `json:"image"`
+	FacebookUrl                 string             `json:"facebook_url"`
+	RedditUrl                   string             `json:"reddit_url"`
+	TelegramUrl                 string             `json:"telegram_url"`
+	SlackUrl                    string             `json:"slack_url"`
+	OtherUrl1                   string             `json:"other_url_1"`
+	OtherUrl2                   string             `json:"other_url_2"`
+	TwitterHandle               string             `json:"twitter_handle"`
+	HasTradingIncentive         bool               `json:"has_trading_incentive"`
+	Centralized                 bool               `json:"centralized"`
+	PublicNotice                string             `json:"public_notice"`
+	AlertNotice                 string             `json:"alert_notice"`
+	TrustScore                  int                `json:"trust_score"`
+	TrustScoreRank              int                `json:"trust_score_rank"`
+	TradeVolume24HBtc           float64            `json:"trade_volume_24h_btc"`
+	TradeVolume24HBtcNormalized float64            `json:"trade_volume_24h_btc_normalized"`
+	Tickers                     []TickerItem       `json:"tickers"`
+	StatusUpdates               []StatusUpdateItem `json:"status_updates"`
+}
+
 // ExchangeRatesResponse https://api.coingecko.com/api/v3/exchange_rates
 type ExchangeRatesResponse struct {
 	Rates ExchangeRates `json:"rates"`
