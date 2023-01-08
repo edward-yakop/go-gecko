@@ -7,7 +7,7 @@ import (
 )
 
 // ExchangeRates https://api.coingecko.com/api/v3/exchange_rates
-func (c *Client) ExchangeRates() (*types.ExchangeRatesItem, error) {
+func (c *Client) ExchangeRates() (*types.ExchangeRates, error) {
 	exchangeRatesURL := fmt.Sprintf("%s/exchange_rates", c.baseURL)
 
 	resp, err := c.makeHTTPRequest(exchangeRatesURL)

@@ -286,11 +286,10 @@ type EventCountryItem struct {
 	Code    string `json:"code"`
 }
 
-// ExchangeRatesItem item in ExchangeRate
-type ExchangeRatesItem map[string]ExchangeRatesItemStruct
+// ExchangeRates item in ExchangeRate
+type ExchangeRates map[string]ExchangeRatesItem
 
-// ExchangeRatesItemStruct struct in ExchangeRateItem
-type ExchangeRatesItemStruct struct {
+type ExchangeRatesItem struct {
 	Name  string  `json:"name"`
 	Unit  string  `json:"unit"`
 	Value float64 `json:"value"`

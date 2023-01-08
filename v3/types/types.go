@@ -118,7 +118,7 @@ type EventsTypes struct {
 
 // ExchangeRatesResponse https://api.coingecko.com/api/v3/exchange_rates
 type ExchangeRatesResponse struct {
-	Rates ExchangeRatesItem `json:"rates"`
+	Rates ExchangeRates `json:"rates"`
 }
 
 // GlobalResponse https://api.coingecko.com/api/v3/global

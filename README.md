@@ -25,7 +25,7 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 |       /coins/{id}/tickers       |  [/]   |   [/]   |         CoinsIDTickers         |
 |       /coins/{id}/history       |  [/]   |   [/]   |         CoinsIDHistory         |
 |    /coins/{id}/market_chart     |  [/]   |   [/]   |       CoinsIDMarketChart       |
-|         /exchange_rates         |  [/]   |         |          ExchangeRate          |
+|         /exchange_rates         |  [/]   |   [/]   |          ExchangeRate          |
 |             /global             |  [/]   |         |             Global             |
 
 ## Usage
