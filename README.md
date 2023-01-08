@@ -1,6 +1,6 @@
 # CoinGecko API Client for Go
 
-[![Build Status](https://travis-ci.com/superoo7/go-gecko.svg?branch=master)](https://travis-ci.com/superoo7/go-gecko) [![GoDoc](https://godoc.org/github.com/edward-yakop/go-gecko?status.svg)](https://godoc.org/github.com/edward-yakop/go-gecko)
+[![Build Status](https://github.com/edward-yakop/go-gecko/actions/workflows/go.yml/badge.svg)](https://github.com/edward-yakop/go-gecko/actions/workflows/go.yml) [![GoDoc](https://godoc.org/github.com/edward-yakop/go-gecko?status.svg)](https://godoc.org/github.com/edward-yakop/go-gecko)
 
 Simple API Client for CoinGecko written in Go
 
@@ -26,6 +26,7 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 |       /coins/{id}/history       |  [/]   |   [/]   |         CoinsIDHistory         |
 |    /coins/{id}/market_chart     |  [/]   |   [/]   |       CoinsIDMarketChart       |
 |           /exchanges            |  [/]   |   [/]   |           Exchanges            |
+|         /exchanges/list         |  [/]   |   [/]   |         ExchangesList          |
 |         /exchange_rates         |  [/]   |   [/]   |          ExchangeRate          |
 |             /global             |  [/]   |   [/]   |             Global             |
 

@@ -94,3 +94,11 @@ func (c *Client) makeHTTPRequest(url string) ([]byte, error) {
 
 	return resp, err
 }
+
+func firstError(fst, snd error) error {
+	if fst != nil {
+		return fst
+	}
+
+	return snd
+}

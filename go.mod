@@ -3,6 +3,7 @@ module github.com/edward-yakop/go-gecko
 go 1.19
 
 require (
+	github.com/buger/jsonparser v1.1.1
 	github.com/h2non/gock v1.2.0
 	github.com/stretchr/testify v1.8.1
 )
