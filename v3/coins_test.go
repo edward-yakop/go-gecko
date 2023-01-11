@@ -70,7 +70,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 }
 
 func TestCoinsID(t *testing.T) {
-	err := setupGock("json/coins_id.json", "/coins/dogecoin")
+	err := setupGockWithHeader("json/coins_id.json", "json/common.headers.json", "/coins/dogecoin")
 	require.NoError(t, err)
 
 	coin, err := c.CoinsID(CoinsIDParams{
@@ -84,6 +84,8 @@ func TestCoinsID(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, coin)
+
+	assert.Equal(t, commonBaseResult, coin.BaseResult)
 
 	require.Equal(t, "doge", coin.Symbol, "coin.Symbol")
 	if assert.Len(t, coin.Categories, 4) {

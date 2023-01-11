@@ -159,12 +159,14 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 	}
 
 	coinsURL := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, params.CoinID, params.encodeNonIDQueryParams())
-	resp, err := c.makeHTTPRequest(coinsURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(coinsURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data *types.CoinsID
+	data := &types.CoinsID{
+		BaseResult: types.NewBaseResult(header),
+	}
 	if err = json.Unmarshal(resp, &data); err != nil {
 		return nil, err
 	}
