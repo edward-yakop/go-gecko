@@ -67,3 +67,60 @@ func TestNewBaseResult(t *testing.T) {
 	assert.Equal(t, secs(120), result.CacheMaxAge)
 	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.CacheExpires)
 }
+
+func Test_toNextPageIndex(t *testing.T) {
+	type args struct {
+		value []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"nil", args{nil}, -1},
+		{"happy path", args{arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=2\u003e; rel=\"next\"")}, 2},
+		{"not defined", args{arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\"")}, -1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, toNextPageIndex(tt.args.value), "toNextPageIndex(%v)", tt.args.value)
+		})
+	}
+}
+
+func Test_toLastPageIndex(t *testing.T) {
+	type args struct {
+		value []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"nil", args{nil}, -1},
+		{"happy path", args{arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=2\u003e; rel=\"next\"")}, 63},
+		{"not defined", args{arrStrings("<https://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true&include_exchange_logo=true&order=volume_desc&page=2>; rel=\"next\"")}, -1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, toLastPageIndex(tt.args.value), "toLastPageIndex(%v)", tt.args.value)
+		})
+	}
+}
+
+func TestNewBasePageResult(t *testing.T) {
+	h := http.Header{
+		"Cache-Control": arrStrings("public, max-age=120"),
+		"Expires":       arrStrings("Wed, 11 Jan 2023 12:08:23 GMT"),
+		"Link":          arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=2\u003e; rel=\"next\""),
+		"Per-Page":      arrStrings("100"),
+		"Total":         arrStrings("6247"),
+	}
+
+	result := NewBasePageResult(h)
+	assert.Equal(t, secs(120), result.CacheMaxAge)
+	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.CacheExpires)
+	assert.Equal(t, 3, result.NextPageIndex)
+	assert.Equal(t, 63, result.LastPageIndex)
+	assert.Equal(t, 6247, result.TotalEntriesCount)
+}

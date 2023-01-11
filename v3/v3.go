@@ -84,7 +84,7 @@ func doReq(req *http.Request, client *http.Client) ([]byte, http.Header, error) 
 func dumpResponse(resp *http.Response, body []byte) {
 	_ = os.WriteFile("resp.json", body, os.ModePerm)
 
-	cp := headerToMap(resp.Header, "cache-control", "expires", "age")
+	cp := headerToMap(resp.Header, "cache-control", "expires", "age", "total", "per-page", "link")
 
 	headerBA, _ := json.Marshal(cp)
 	_ = os.WriteFile("resp_header.json", headerBA, os.ModePerm)

@@ -2,6 +2,7 @@ package types
 
 import (
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -39,6 +40,71 @@ func toMaxAge(value []string) time.Duration {
 	}
 
 	return time.Nanosecond
+}
+
+type BasePageResult struct {
+	BaseResult
+	NextPageIndex     int
+	LastPageIndex     int
+	PageSize          int
+	TotalEntriesCount int
+}
+
+func NewBasePageResult(header http.Header) BasePageResult {
+	linkValue := header["Link"]
+	return BasePageResult{
+		BaseResult:        NewBaseResult(header),
+		NextPageIndex:     toNextPageIndex(linkValue),
+		LastPageIndex:     toLastPageIndex(linkValue),
+		PageSize:          toInt(header["Per-Page"], -1),
+		TotalEntriesCount: toInt(header["Total"], -1),
+	}
+}
+
+func toNextPageIndex(value []string) int {
+	return getPageIndex(value, ">; rel=\"next\"")
+}
+
+func getPageIndex(value []string, snippets string) int {
+	if len(value) >= 1 {
+		candidates := strings.Split(value[0], ",")
+		for _, c := range candidates {
+			c = strings.TrimSpace(c)
+
+			index := strings.Index(c, snippets)
+			if index == -1 {
+				continue
+			}
+
+			if u, uErr := url.Parse(c[1:index]); uErr == nil {
+				if query, qErr := url.ParseQuery(u.RawQuery); qErr == nil {
+					if pageStr := query.Get("page"); pageStr != "" {
+						if pageIndex, pErr := strconv.Atoi(pageStr); pErr == nil {
+							return pageIndex
+						}
+					}
+				}
+			}
+
+			return -1
+		}
+	}
+
+	return -1
+}
+
+func toLastPageIndex(value []string) int {
+	return getPageIndex(value, ">; rel=\"last\"")
+}
+
+func toInt(value []string, defaultValue int) int {
+	if len(value) >= 1 {
+		if v, err := strconv.Atoi(value[0]); err == nil {
+			return v
+		}
+	}
+
+	return defaultValue
 }
 
 // Ping https://api.coingecko.com/api/v3/ping
@@ -100,6 +166,7 @@ type CoinsID struct {
 
 // CoinsIDTickers https://api.coingecko.com/api/v3/coins/steem/tickers?page=1
 type CoinsIDTickers struct {
+	BasePageResult
 	Name    string       `json:"name"`
 	Tickers []TickerItem `json:"tickers"`
 }

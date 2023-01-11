@@ -1,0 +1,17 @@
+{
+  "Cache-Control": [
+    "public, max-age=120"
+  ],
+  "Expires": [
+    "Wed, 11 Jan 2023 12:44:47 GMT"
+  ],
+  "Link": [
+    "\u003chttps://api.coingecko.com/some/path?page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/some/path?page=2\u003e; rel=\"next\""
+  ],
+  "Per-Page": [
+    "100"
+  ],
+  "Total": [
+    "6247"
+  ]
+}

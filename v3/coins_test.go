@@ -102,7 +102,7 @@ func TestCoinsID(t *testing.T) {
 }
 
 func TestClient_CoinsIDTickers(t *testing.T) {
-	err := setupGock("json/coins_id_tickers.json", "/coins/bitcoin/tickers")
+	err := setupGockWithHeader("json/coins_id_tickers.json", "json/common_page.headers.json", "/coins/bitcoin/tickers")
 	require.NoError(t, err)
 
 	coinsIDTickers, err := c.CoinsIDTickers(CoinsIDTickersParam{
@@ -114,6 +114,8 @@ func TestClient_CoinsIDTickers(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, coinsIDTickers)
+
+	assert.Equal(t, commonBasePageResult, coinsIDTickers.BasePageResult)
 
 	tickers := coinsIDTickers.Tickers
 	require.Len(t, tickers, 100)

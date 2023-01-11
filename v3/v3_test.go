@@ -58,3 +58,18 @@ func baseResult(maxAge time.Duration, expires time.Time) types.BaseResult {
 }
 
 var commonBaseResult = baseResult(120, time.Date(2023, time.January, 11, 12, 44, 47, 0, time.UTC))
+
+func basePageResult(maxAge time.Duration, expires time.Time, nextPageIndex, lastPageIndex, pageSize, totalEntriesCount int) types.BasePageResult {
+	return types.BasePageResult{
+		BaseResult:        baseResult(maxAge, expires),
+		NextPageIndex:     nextPageIndex,
+		LastPageIndex:     lastPageIndex,
+		PageSize:          pageSize,
+		TotalEntriesCount: totalEntriesCount,
+	}
+}
+
+var commonBasePageResult = basePageResult(
+	120, time.Date(2023, time.January, 11, 12, 44, 47, 0, time.UTC),
+	2, 63, 100, 6247,
+)
