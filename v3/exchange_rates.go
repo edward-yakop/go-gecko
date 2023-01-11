@@ -10,12 +10,14 @@ import (
 func (c *Client) ExchangeRates() (*types.ExchangeRates, error) {
 	exchangeRatesURL := fmt.Sprintf("%s/exchange_rates", c.baseURL)
 
-	resp, err := c.makeHTTPRequest(exchangeRatesURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(exchangeRatesURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data *types.ExchangeRatesResponse
+	data := &types.ExchangeRatesResponse{
+		BaseResult: types.NewBaseResult(header),
+	}
 	if err = json.Unmarshal(resp, &data); err != nil {
 		return nil, err
 	}

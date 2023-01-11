@@ -275,6 +275,7 @@ type ExchangeTickers struct {
 
 // ExchangeRatesResponse https://api.coingecko.com/api/v3/exchange_rates
 type ExchangeRatesResponse struct {
+	BaseResult
 	Rates ExchangeRates `json:"rates"`
 }
 
