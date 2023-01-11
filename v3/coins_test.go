@@ -5,16 +5,19 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
 )
 
 func TestCoinsList(t *testing.T) {
-	err := setupGock("json/coins_list.json", "/coins/list")
+	err := setupGockWithHeader("json/coins_list.json", "json/coins_list.headers.json", "/coins/list")
 	require.NoError(t, err)
 
 	list, err := c.CoinsList()
 	require.NoError(t, err)
+	require.NotNil(t, list)
 
-	item := (*list)[0]
+	item := list.Coins[0]
+	assert.Equal(t, baseResult(109, 120, time.Date(2023, time.January, 11, 12, 44, 47, 0, time.UTC)), list.BaseResult)
 	assert.Equal(t, "01coin", item.ID, "item.ID")
 }
 

@@ -1,5 +1,58 @@
 package types
 
+import (
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+)
+
+type BaseResult struct {
+	Age     time.Duration
+	MaxAge  time.Duration
+	Expires time.Time
+}
+
+func NewBaseResult(header http.Header) BaseResult {
+	return BaseResult{
+		Age:     toAge(header["Age"]),
+		Expires: toExpires(header["Expires"]),
+		MaxAge:  toMaxAge(header["Cache-Control"]),
+	}
+}
+
+func toAge(value []string) time.Duration {
+	if len(value) >= 1 {
+		if v, err := strconv.Atoi(value[0]); err == nil {
+			return time.Second * time.Duration(v)
+		}
+	}
+
+	return time.Hour
+}
+
+func toExpires(value []string) time.Time {
+	if len(value) >= 1 {
+		if t, err := time.Parse("Mon, 02 Jan 2006 15:04:05 MST", value[0]); err == nil {
+			return t.UTC()
+		}
+	}
+
+	return time.Time{}
+}
+
+func toMaxAge(value []string) time.Duration {
+	if len(value) >= 1 {
+		if index := strings.Index(value[0], "max-age="); index != -1 {
+			if age, err := strconv.Atoi(value[0][index+8:]); err == nil {
+				return time.Second * time.Duration(age)
+			}
+		}
+	}
+
+	return time.Nanosecond
+}
+
 // Ping https://api.coingecko.com/api/v3/ping
 type Ping struct {
 	GeckoSays string `json:"gecko_says"`
@@ -15,8 +68,11 @@ type SimpleSinglePrice struct {
 // SimpleSupportedVSCurrencies https://api.coingecko.com/api/v3/simple/supported_vs_currencies
 type SimpleSupportedVSCurrencies []string
 
-// CoinList https://api.coingecko.com/api/v3/coins/list
-type CoinList []CoinsListItem
+type CoinList struct {
+	BaseResult
+
+	Coins []CoinsListItem
+}
 
 // CoinsMarket https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false
 type CoinsMarket []CoinsMarketItem

@@ -12,13 +12,16 @@ import (
 // CoinsList /coins/list
 func (c *Client) CoinsList() (*types.CoinList, error) {
 	coinsListURL := fmt.Sprintf("%s/coins/list", c.baseURL)
-	resp, err := c.makeHTTPRequest(coinsListURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(coinsListURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data *types.CoinList
-	if err = json.Unmarshal(resp, &data); err != nil {
+	var data = &types.CoinList{
+		BaseResult: types.NewBaseResult(header),
+		Coins:      []types.CoinsListItem{},
+	}
+	if err = json.Unmarshal(resp, &data.Coins); err != nil {
 		return nil, err
 	}
 

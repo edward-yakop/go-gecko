@@ -1,6 +1,7 @@
 package coingecko
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -54,10 +55,10 @@ func NewClient(httpClient *http.Client, options ...ClientOption) *Client {
 
 // helper
 // doReq HTTP client
-func doReq(req *http.Request, client *http.Client) ([]byte, error) {
+func doReq(req *http.Request, client *http.Client) ([]byte, http.Header, error) {
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	defer func(Body io.ReadCloser) {
@@ -66,31 +67,61 @@ func doReq(req *http.Request, client *http.Client) ([]byte, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("%s", body)
+		return nil, nil, fmt.Errorf("%s", body)
 	}
 
-	return body, nil
+	//dumpResponse(resp, body)
+
+	return body, resp.Header, nil
+}
+
+func dumpResponse(resp *http.Response, body []byte) {
+	_ = os.WriteFile("resp.json", body, os.ModePerm)
+
+	cp := headerToMap(resp.Header, "cache-control", "expires", "age")
+
+	headerBA, _ := json.Marshal(cp)
+	_ = os.WriteFile("resp_header.json", headerBA, os.ModePerm)
+}
+
+func headerToMap(header http.Header, keys ...string) map[string][]string {
+	r := make(map[string][]string)
+	for k, v := range header {
+		for _, key := range keys {
+			if strings.EqualFold(k, key) {
+				r[k] = v
+			}
+		}
+	}
+
+	return r
 }
 
 // makeHTTPRequest HTTP request helper
-func (c *Client) makeHTTPRequest(url string) ([]byte, error) {
+func (c *Client) makeHTTPRequestWithHeader(url string) ([]byte, http.Header, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if c.httpRequestModifier != nil {
 		c.httpRequestModifier(req)
 	}
 
-	resp, err := doReq(req, c.httpClient)
+	resp, header, err := doReq(req, c.httpClient)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	return resp, header, err
+}
+
+func (c *Client) makeHTTPRequest(url string) ([]byte, error) {
+	resp, _, err := c.makeHTTPRequestWithHeader(url)
 
 	return resp, err
 }
