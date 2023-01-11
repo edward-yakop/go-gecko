@@ -248,6 +248,7 @@ type Exchange struct {
 
 // ExchangeDetail https://api.coingecko.com/api/v3/exchanges/{id}
 type ExchangeDetail struct {
+	BaseResult
 	Name                        string             `json:"name"`
 	YearEstablished             int                `json:"year_established"`
 	Country                     string             `json:"country"`

@@ -9,7 +9,7 @@ import (
 )
 
 func TestClient_Exchanges(t *testing.T) {
-	err := setupGock("json/exchanges.json", "/exchanges")
+	err := setupGockWithHeader("json/exchanges.json", "json/common_page.headers.json", "/exchanges")
 	require.NoError(t, err)
 
 	got, err := c.Exchanges(ExchangesParam{
@@ -18,6 +18,8 @@ func TestClient_Exchanges(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, got)
+
+	assert.Equal(t, commonBasePageResult, got.BasePageResult)
 
 	require.Len(t, got.Entries, 250)
 
@@ -48,12 +50,14 @@ func TestClient_ExchangesList(t *testing.T) {
 }
 
 func TestClient_ExchangesID(t *testing.T) {
-	err := setupGock("json/exchanges_id.json", "/exchanges/binance")
+	err := setupGockWithHeader("json/exchanges_id.json", "json/common.headers.json", "/exchanges/binance")
 	require.NoError(t, err)
 
 	got, err := c.ExchangesID("binance")
 	require.NoError(t, err)
 	require.NotNil(t, got)
+
+	assert.Equal(t, commonBaseResult, got.BaseResult)
 
 	assert.Equal(t, "Binance", got.Name, "got.Name")
 	assert.Equal(t, 2017, got.YearEstablished, "got.YearEstablished")

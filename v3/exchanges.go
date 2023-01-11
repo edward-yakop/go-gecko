@@ -121,12 +121,14 @@ func (c *Client) ExchangesID(exchangeID string) (*types.ExchangeDetail, error) {
 
 	exchangesListURL := fmt.Sprintf("%s/exchanges/%s", c.baseURL, exchangeID)
 
-	resp, err := c.makeHTTPRequest(exchangesListURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(exchangesListURL)
 	if err != nil {
 		return nil, err
 	}
 
-	data := &types.ExchangeDetail{}
+	data := &types.ExchangeDetail{
+		BaseResult: types.NewBaseResult(header),
+	}
 	if err = json.Unmarshal(resp, data); err != nil {
 		return nil, err
 	}
