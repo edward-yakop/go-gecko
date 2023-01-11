@@ -106,7 +106,10 @@ type CoinsIDTickers struct {
 
 // CoinsIDHistory https://api.coingecko.com/api/v3/coins/steem/history?date=30-12-2018
 type CoinsIDHistory struct {
-	coinBaseStruct
+	BaseResult
+	ID             string                       `json:"id"`
+	Symbol         string                       `json:"symbol"`
+	Name           string                       `json:"name"`
 	Localization   LocalizationItem             `json:"localization"`
 	Image          ImageItem                    `json:"image"`
 	MarketData     *CoinIDHistoryMarketDataItem `json:"market_data"`

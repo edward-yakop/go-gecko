@@ -133,7 +133,7 @@ func TestClient_CoinsIDTickers(t *testing.T) {
 }
 
 func TestClient_CoinsIDHistory(t *testing.T) {
-	err := setupGock("json/coins_id_history.json", "/coins/bitcoin/history")
+	err := setupGockWithHeader("json/coins_id_history.json", "json/common.headers.json", "/coins/bitcoin/history")
 	require.NoError(t, err)
 
 	history, err := c.CoinsIDHistory(CoinsIDHistoryParams{
@@ -143,6 +143,8 @@ func TestClient_CoinsIDHistory(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, history)
+
+	assert.Equal(t, commonBaseResult, history.BaseResult)
 
 	assert.Equal(t, "btc", history.Symbol, "history.Symbol")
 	assert.Equal(t, "bitcoin", history.ID, "history.ID")

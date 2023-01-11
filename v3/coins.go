@@ -265,12 +265,14 @@ func (c *Client) CoinsIDHistory(params CoinsIDHistoryParams) (*types.CoinsIDHist
 	}
 
 	coinsIDHistoryURL := fmt.Sprintf("%s/coins/%s/history?%s", c.baseURL, params.CoinID, params.encodeNonIDQueryParams())
-	resp, err := c.makeHTTPRequest(coinsIDHistoryURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(coinsIDHistoryURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data *types.CoinsIDHistory
+	data := &types.CoinsIDHistory{
+		BaseResult: types.NewBaseResult(header),
+	}
 	if err = json.Unmarshal(resp, &data); err != nil {
 		return nil, err
 	}
