@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"strings"
 )
 
 var baseURL = "https://api.coingecko.com/api/v3"
