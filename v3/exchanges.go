@@ -32,15 +32,19 @@ func (p ExchangesParam) encodeQueryParams() string {
 }
 
 // Exchanges https://api.coingecko.com/api/v3/exchanges
-func (c *Client) Exchanges(params ExchangesParam) (map[string]types.Exchange, error) {
+func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 	exchangesURL := fmt.Sprintf("%s/exchanges?%s", c.baseURL, params.encodeQueryParams())
 
-	resp, err := c.makeHTTPRequest(exchangesURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(exchangesURL)
 	if err != nil {
 		return nil, err
 	}
 
-	r := make(map[string]types.Exchange)
+	m := make(map[string]types.Exchange)
+	r := &types.Exchanges{
+		BasePageResult: types.NewBasePageResult(header),
+		Entries:        m,
+	}
 
 	_, _ = jsonparser.ArrayEach(resp, func(ba []byte, _ jsonparser.ValueType, _ int, pErr error) {
 		hasError := err != nil || pErr != nil
@@ -51,7 +55,7 @@ func (c *Client) Exchanges(params ExchangesParam) (map[string]types.Exchange, er
 
 		var e types.Exchange
 		if err = json.Unmarshal(ba, &e); err == nil {
-			r[e.Id] = e
+			m[e.Id] = e
 		}
 	})
 

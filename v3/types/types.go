@@ -225,6 +225,11 @@ type CoinsIDMarketChart struct {
 // 	MarketData          `json:"market_data"`
 // }
 
+type Exchanges struct {
+	BasePageResult
+	Entries map[string]Exchange
+}
+
 // Exchange https://api.coingecko.com/api/v3/exchanges
 type Exchange struct {
 	Id                          string  `json:"id"`
