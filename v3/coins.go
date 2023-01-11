@@ -167,12 +167,12 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 }
 
 type CoinsIDTickersParam struct {
-	CoinsID                string                // CoinID (can be obtained from /coins)
-	ExchangeIds            []string              // filter results by exchange_ids ExchangesList
-	IncludeExchangeLogo    bool                  // flag to show exchange logo
-	PageNo                 int                   // Page through results
-	Order                  types.CoinTickerOrder // If not set default to trust_score_desc
-	Show2PctOrderBookDepth bool                  // flag to show 2% order book depth
+	CoinsID                string            // CoinID (can be obtained from /coins)
+	ExchangeIds            []string          // filter results by exchange_ids ExchangesList
+	IncludeExchangeLogo    bool              // flag to show exchange logo
+	PageNo                 int               // Page through results
+	Order                  types.TickerOrder // If not set default to trust_score_desc
+	Show2PctOrderBookDepth bool              // flag to show 2% order book depth
 }
 
 func (p CoinsIDTickersParam) Validate() error {
@@ -195,7 +195,7 @@ func (p CoinsIDTickersParam) encodeNonIDQueryParams() string {
 	if p.PageNo < 1 {
 		p.PageNo = 1
 	}
-	params.Add("include_exchange_logo", format.Int2String(p.PageNo))
+	params.Add("page", format.Int2String(p.PageNo))
 
 	params.Add("order", p.Order.String())
 	params.Add("depth", format.Bool2String(p.Show2PctOrderBookDepth))

@@ -104,7 +104,7 @@ func TestClient_CoinsIDTickers(t *testing.T) {
 		CoinsID:                "bitcoin",
 		PageNo:                 1,
 		IncludeExchangeLogo:    true,
-		Order:                  types.CoinTickerOrderVolumeDesc,
+		Order:                  types.TickerOrderVolumeDesc,
 		Show2PctOrderBookDepth: true,
 	})
 	require.NoError(t, err)
@@ -124,7 +124,7 @@ func TestClient_CoinsIDTickers(t *testing.T) {
 	assert.Equal(t, false, first.IsAnomaly, "tickers[0].IsAnomaly")
 	assert.Equal(t, false, first.IsStale, "tickers[0].IsStale")
 	assert.Equal(t, "bitcoin", first.CoinID, "tickers[0].CoinID")
-	assert.Equal(t, "tether", first.TargetCoinId, "tickers[0].TargetCoinId")
+	assert.Equal(t, "tether", first.TargetCoinID, "tickers[0].TargetCoinID")
 }
 
 func TestClient_CoinsIDHistory(t *testing.T) {

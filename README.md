@@ -26,8 +26,9 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 |       /coins/{id}/history       | :heavy_check_mark: | :heavy_check_mark: |         CoinsIDHistory         |
 |    /coins/{id}/market_chart     | :heavy_check_mark: | :heavy_check_mark: |       CoinsIDMarketChart       |
 |           /exchanges            | :heavy_check_mark: | :heavy_check_mark: |           Exchanges            |
-|          /exchanges/id          | :heavy_check_mark: | :heavy_check_mark: |          ExchangesID           |
+|         /exchanges/{id}         | :heavy_check_mark: | :heavy_check_mark: |          ExchangesID           |
 |         /exchanges/list         | :heavy_check_mark: | :heavy_check_mark: |         ExchangesList          |
+|     /exchanges/{id}/tickers     | :heavy_check_mark: | :heavy_check_mark: |        ExchangesTickers        |
 |         /exchange_rates         | :heavy_check_mark: | :heavy_check_mark: |          ExchangeRate          |
 |             /global             | :heavy_check_mark: | :heavy_check_mark: |             Global             |
 

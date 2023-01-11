@@ -13,4 +13,5 @@ do
     echo "========================$Color_Off"
     go run _example/v3/$filename >/dev/null
     echo "SUCCESSFUL"
+    sleep 3 #Attempt to work around with rate limit issue
 done

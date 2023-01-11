@@ -148,6 +148,11 @@ type ExchangeDetail struct {
 	StatusUpdates               []StatusUpdateItem `json:"status_updates"`
 }
 
+type ExchangeTickers struct {
+	Name    string       `json:"name"`
+	Tickers []TickerItem `json:"tickers"`
+}
+
 // ExchangeRatesResponse https://api.coingecko.com/api/v3/exchange_rates
 type ExchangeRatesResponse struct {
 	Rates ExchangeRates `json:"rates"`

@@ -55,15 +55,15 @@ func (pcp PriceChangePercentage) String() string {
 	}[pcp]
 }
 
-type CoinTickerOrder int
+type TickerOrder int
 
 const (
-	CoinTickerOrderTrustScoreDesc = iota
-	CoinTickerOrderTrustScoreAsc
-	CoinTickerOrderVolumeDesc
+	TickerOrderTrustScoreDesc = iota
+	TickerOrderTrustScoreAsc
+	TickerOrderVolumeDesc
 )
 
-func (cto CoinTickerOrder) String() string {
+func (cto TickerOrder) String() string {
 	return []string{
 		"trust_score_desc",
 		"trust_score_asc",
@@ -219,14 +219,14 @@ type TickerItem struct {
 	ConvertedVolume        map[string]float64 `json:"converted_volume"`
 	TrustScore             string             `json:"trust_score"`
 	BidAskSpreadPercentage float64            `json:"bid_ask_spread_percentage"`
-	Timestamp              string             `json:"timestamp"`
-	LastTradedAt           string             `json:"last_traded_at"`
-	LastFetchAt            string             `json:"last_fetch_at"`
+	Timestamp              time.Time          `json:"timestamp"`
+	LastTradedAt           time.Time          `json:"last_traded_at"`
+	LastFetchAt            time.Time          `json:"last_fetch_at"`
 	IsAnomaly              bool               `json:"is_anomaly"`
 	IsStale                bool               `json:"is_stale"`
 	TradeUrl               string             `json:"trade_url"`
 	CoinID                 string             `json:"coin_id"`
-	TargetCoinId           string             `json:"target_coin_id,omitempty"`
+	TargetCoinID           string             `json:"target_coin_id,omitempty"`
 }
 
 // StatusUpdateItem for BEAM
