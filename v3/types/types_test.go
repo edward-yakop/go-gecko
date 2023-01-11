@@ -120,7 +120,7 @@ func TestNewBasePageResult(t *testing.T) {
 	result := NewBasePageResult(h)
 	assert.Equal(t, secs(120), result.CacheMaxAge)
 	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.CacheExpires)
-	assert.Equal(t, 3, result.NextPageIndex)
+	assert.Equal(t, 2, result.NextPageIndex)
 	assert.Equal(t, 63, result.LastPageIndex)
 	assert.Equal(t, 6247, result.TotalEntriesCount)
 }
