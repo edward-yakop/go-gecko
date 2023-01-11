@@ -160,7 +160,7 @@ func TestClient_CoinsIDHistory(t *testing.T) {
 }
 
 func TestClient_CoinsIDMarketChart(t *testing.T) {
-	err := setupGock("json/coins_id_market_chart.json", "/coins/bitcoin/market_chart")
+	err := setupGockWithHeader("json/coins_id_market_chart.json", "json/common.headers.json", "/coins/bitcoin/market_chart")
 	require.NoError(t, err)
 
 	mc, err := c.CoinsIDMarketChart(CoinsIDMarketChartParams{
@@ -168,6 +168,8 @@ func TestClient_CoinsIDMarketChart(t *testing.T) {
 		VsCurrency: "usd",
 		Days:       "1",
 	})
+
+	assert.Equal(t, commonBaseResult, mc.BaseResult)
 
 	require.NoError(t, err)
 	require.NotNil(t, mc)

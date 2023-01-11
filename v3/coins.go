@@ -320,17 +320,19 @@ func (c *Client) CoinsIDMarketChart(params CoinsIDMarketChartParams) (*types.Coi
 	}
 
 	coinsIDMarketChartURL := fmt.Sprintf("%s/coins/%s/market_chart?%s", c.baseURL, params.CoinsID, params.encodeNonIDQueryParams())
-	resp, err := c.makeHTTPRequest(coinsIDMarketChartURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(coinsIDMarketChartURL)
 	if err != nil {
 		return nil, err
 	}
 
-	data := types.CoinsIDMarketChart{}
+	data := &types.CoinsIDMarketChart{
+		BaseResult: types.NewBaseResult(header),
+	}
 	if err = json.Unmarshal(resp, &data); err != nil {
 		return nil, err
 	}
 
-	return &data, nil
+	return data, nil
 }
 
 // CoinsIDStatusUpdates

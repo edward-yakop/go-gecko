@@ -193,6 +193,7 @@ type CoinIDHistoryMarketDataItem struct {
 
 // CoinsIDMarketChart https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1
 type CoinsIDMarketChart struct {
+	BaseResult
 	Prices       []ChartItem `json:"prices"`
 	MarketCaps   []ChartItem `json:"market_caps"`
 	TotalVolumes []ChartItem `json:"total_volumes"`
