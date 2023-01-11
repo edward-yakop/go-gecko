@@ -8,27 +8,15 @@ import (
 )
 
 type BaseResult struct {
-	Age     time.Duration
-	MaxAge  time.Duration
-	Expires time.Time
+	CacheMaxAge  time.Duration
+	CacheExpires time.Time
 }
 
 func NewBaseResult(header http.Header) BaseResult {
 	return BaseResult{
-		Age:     toAge(header["Age"]),
-		Expires: toExpires(header["Expires"]),
-		MaxAge:  toMaxAge(header["Cache-Control"]),
+		CacheExpires: toExpires(header["Expires"]),
+		CacheMaxAge:  toMaxAge(header["Cache-Control"]),
 	}
-}
-
-func toAge(value []string) time.Duration {
-	if len(value) >= 1 {
-		if v, err := strconv.Atoi(value[0]); err == nil {
-			return time.Second * time.Duration(v)
-		}
-	}
-
-	return time.Hour
 }
 
 func toExpires(value []string) time.Time {
@@ -70,16 +58,21 @@ type SimpleSupportedVSCurrencies []string
 
 type CoinList struct {
 	BaseResult
-
-	Coins []CoinsListItem
+	Entries []CoinsListItem
 }
 
 // CoinsMarket https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false
-type CoinsMarket []CoinsMarketItem
+type CoinsMarket struct {
+	BaseResult
+	Entries []CoinsMarketItem
+}
 
 // CoinsID https://api.coingecko.com/api/v3/coins/bitcoin
 type CoinsID struct {
-	coinBaseStruct
+	BaseResult
+	ID                  string              `json:"id"`
+	Symbol              string              `json:"symbol"`
+	Name                string              `json:"name"`
 	BlockTimeInMin      int32               `json:"block_time_in_minutes"`
 	HashingAlgorithm    string              `json:"hashing_algorithm"`
 	Categories          []string            `json:"categories"`

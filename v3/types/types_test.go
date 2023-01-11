@@ -59,13 +59,11 @@ func secs(i time.Duration) time.Duration {
 
 func TestNewBaseResult(t *testing.T) {
 	h := http.Header{
-		"Age":           arrStrings("109"),
 		"Cache-Control": arrStrings("public, max-age=120"),
 		"Expires":       arrStrings("Wed, 11 Jan 2023 12:08:23 GMT"),
 	}
 
 	result := NewBaseResult(h)
-	assert.Equal(t, secs(109), result.Age)
-	assert.Equal(t, secs(120), result.MaxAge)
-	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.Expires)
+	assert.Equal(t, secs(120), result.CacheMaxAge)
+	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.CacheExpires)
 }

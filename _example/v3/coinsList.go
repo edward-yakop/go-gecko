@@ -13,5 +13,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Available coins:", len(list.Coins))
+	fmt.Println("Available coins:", len(list.Entries))
 }

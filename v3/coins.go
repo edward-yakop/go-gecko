@@ -19,9 +19,9 @@ func (c *Client) CoinsList() (*types.CoinList, error) {
 
 	var data = &types.CoinList{
 		BaseResult: types.NewBaseResult(header),
-		Coins:      []types.CoinsListItem{},
+		Entries:    []types.CoinsListItem{},
 	}
-	if err = json.Unmarshal(resp, &data.Coins); err != nil {
+	if err = json.Unmarshal(resp, &data.Entries); err != nil {
 		return nil, err
 	}
 
@@ -99,19 +99,22 @@ func (p CoinsMarketParams) encodeQueryParams() string {
 }
 
 // CoinsMarket /coins/market
-func (c *Client) CoinsMarket(params CoinsMarketParams) (types.CoinsMarket, error) {
+func (c *Client) CoinsMarket(params CoinsMarketParams) (*types.CoinsMarket, error) {
 	if err := params.Validate(); err != nil {
 		return nil, err
 	}
 
 	coinsMarketsURL := fmt.Sprintf("%s/coins/markets?%s", c.baseURL, params.encodeQueryParams())
-	resp, err := c.makeHTTPRequest(coinsMarketsURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(coinsMarketsURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data types.CoinsMarket
-	if err = json.Unmarshal(resp, &data); err != nil {
+	data := &types.CoinsMarket{
+		BaseResult: types.NewBaseResult(header),
+		Entries:    []types.CoinsMarketItem{},
+	}
+	if err = json.Unmarshal(resp, &data.Entries); err != nil {
 		return nil, err
 	}
 

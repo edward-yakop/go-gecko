@@ -33,8 +33,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Total coins: ", len(market))
-	fmt.Println(market)
+	fmt.Println("Total coins: ", len(market.Entries))
+	fmt.Println(market.Entries)
 
 	// with pagination instead
 	market, err = cg.CoinsMarket(gecko.CoinsMarketParams{
@@ -45,6 +45,6 @@ func main() {
 		Sparkline:             true,
 		PriceChangePercentage: priceChangePercentage,
 	})
-	fmt.Println("Total coins: ", len(market))
-	fmt.Println(market)
+	fmt.Println("Total coins: ", len(market.Entries))
+	fmt.Println(market.Entries)
 }

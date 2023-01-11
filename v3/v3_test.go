@@ -50,10 +50,11 @@ func secs(i time.Duration) time.Duration {
 	return time.Second * i
 }
 
-func baseResult(age, maxAge time.Duration, expires time.Time) types.BaseResult {
+func baseResult(maxAge time.Duration, expires time.Time) types.BaseResult {
 	return types.BaseResult{
-		Age:     secs(age),
-		MaxAge:  secs(maxAge),
-		Expires: expires,
+		CacheMaxAge:  secs(maxAge),
+		CacheExpires: expires,
 	}
 }
+
+var commonBaseResult = baseResult(120, time.Date(2023, time.January, 11, 12, 44, 47, 0, time.UTC))

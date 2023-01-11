@@ -5,24 +5,23 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	"time"
 )
 
 func TestCoinsList(t *testing.T) {
-	err := setupGockWithHeader("json/coins_list.json", "json/coins_list.headers.json", "/coins/list")
+	err := setupGockWithHeader("json/coins_list.json", "json/common.headers.json", "/coins/list")
 	require.NoError(t, err)
 
 	list, err := c.CoinsList()
 	require.NoError(t, err)
 	require.NotNil(t, list)
 
-	item := list.Coins[0]
-	assert.Equal(t, baseResult(109, 120, time.Date(2023, time.January, 11, 12, 44, 47, 0, time.UTC)), list.BaseResult)
+	item := list.Entries[0]
+	assert.Equal(t, commonBaseResult, list.BaseResult)
 	assert.Equal(t, "01coin", item.ID, "item.ID")
 }
 
 func TestClient_CoinsMarket(t *testing.T) {
-	err := setupGock("json/coins_market.json", "/coins/markets")
+	err := setupGockWithHeader("json/coins_market.json", "json/common.headers.json", "/coins/markets")
 	require.NoError(t, err)
 
 	market, err := c.CoinsMarket(CoinsMarketParams{
@@ -42,9 +41,10 @@ func TestClient_CoinsMarket(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	require.Len(t, market, 3)
+	require.Len(t, market.Entries, 3)
 
-	if btc := market[0]; assert.Equal(t, "bitcoin", btc.ID, "market[0].ID") {
+	assert.Equal(t, commonBaseResult, market.BaseResult)
+	if btc := market.Entries[0]; assert.Equal(t, "bitcoin", btc.ID, "market[0].ID") {
 		assert.Equal(t, "btc", btc.Symbol)
 		assert.Equal(t, "Bitcoin EY", btc.Name)
 		assert.Equal(t, 16919.92, btc.CurrentPrice)
@@ -52,7 +52,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 1, btc.MarketCapRank)
 	}
 
-	if eth := market[1]; assert.Equal(t, "ethereum", eth.ID, "market[1].ID") {
+	if eth := market.Entries[1]; assert.Equal(t, "ethereum", eth.ID, "market[1].ID") {
 		assert.Equal(t, "eth", eth.Symbol)
 		assert.Equal(t, "Ethereum EY", eth.Name)
 		assert.Equal(t, 1263.96, eth.CurrentPrice)
@@ -60,7 +60,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 2, eth.MarketCapRank)
 	}
 
-	if steem := market[2]; assert.Equal(t, "steem", steem.ID, "market[2].ID") {
+	if steem := market.Entries[2]; assert.Equal(t, "steem", steem.ID, "market[2].ID") {
 		assert.Equal(t, "steem", steem.Symbol)
 		assert.Equal(t, "Steem EY", steem.Name)
 		assert.Equal(t, 0.150837, steem.CurrentPrice)
