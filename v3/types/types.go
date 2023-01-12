@@ -89,6 +89,7 @@ func toInt(value []string, defaultValue int) int {
 
 // Ping https://api.coingecko.com/api/v3/ping
 type Ping struct {
+	BaseResult
 	GeckoSays string `json:"gecko_says"`
 }
 

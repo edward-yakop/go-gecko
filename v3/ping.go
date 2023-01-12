@@ -10,12 +10,14 @@ import (
 func (c *Client) Ping() (*types.Ping, error) {
 	pingURL := fmt.Sprintf("%s/ping", c.baseURL)
 
-	resp, err := c.makeHTTPRequest(pingURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(pingURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data *types.Ping
+	data := &types.Ping{
+		BaseResult: types.NewBaseResult(header),
+	}
 	if err = json.Unmarshal(resp, &data); err != nil {
 		return nil, err
 	}
