@@ -67,15 +67,20 @@ func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 }
 
 // ExchangesList https://api.coingecko.com/api/v3/exchanges/list
-func (c *Client) ExchangesList() (map[string]string, error) {
+func (c *Client) ExchangesList() (*types.ExchangesList, error) {
 	exchangesListURL := fmt.Sprintf("%s/exchanges/list", c.baseURL)
 
-	resp, err := c.makeHTTPRequest(exchangesListURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(exchangesListURL)
 	if err != nil {
 		return nil, err
 	}
 
-	r := make(map[string]string)
+	m := make(map[string]string)
+	r := &types.ExchangesList{
+		BaseResult: types.NewBaseResult(header),
+		Entries:    m,
+	}
+
 	itemPaths := [][]string{
 		{"id"},
 		{"name"},
@@ -103,7 +108,7 @@ func (c *Client) ExchangesList() (map[string]string, error) {
 			}
 		}, itemPaths...)
 		if err == nil {
-			r[id] = name
+			m[id] = name
 		}
 	})
 

@@ -37,14 +37,16 @@ func TestClient_Exchanges(t *testing.T) {
 }
 
 func TestClient_ExchangesList(t *testing.T) {
-	err := setupGock("json/exchanges_list.json", "/exchanges/list")
+	err := setupGockWithHeader("json/exchanges_list.json", "json/common.headers.json", "/exchanges/list")
 	require.NoError(t, err)
 
 	got, err := c.ExchangesList()
 	require.NoError(t, err)
-	require.NotEmpty(t, got)
+	require.NotNil(t, got)
 
-	binance, ok := got["binance"]
+	assert.Equal(t, commonBaseResult, got.BaseResult)
+
+	binance, ok := got.Entries["binance"]
 	assert.True(t, ok)
 	assert.Equal(t, "Binance", binance)
 }

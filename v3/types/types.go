@@ -226,6 +226,11 @@ type Exchange struct {
 	TradeVolume24HBtcNormalized float64 `json:"trade_volume_24h_btc_normalized"`
 }
 
+type ExchangesList struct {
+	BaseResult
+	Entries map[string]string // map[id]name
+}
+
 // ExchangeDetail https://api.coingecko.com/api/v3/exchanges/{id}
 type ExchangeDetail struct {
 	BaseResult
