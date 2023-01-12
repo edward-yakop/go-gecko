@@ -42,7 +42,7 @@ func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 
 	m := make(map[string]types.Exchange)
 	r := &types.Exchanges{
-		BasePageResult: types.NewBasePageResult(header),
+		BasePageResult: types.NewBasePageResult(header, params.PageNo),
 		Entries:        m,
 	}
 
@@ -184,12 +184,14 @@ func (c *Client) ExchangesIDTickers(params ExchangesIDTickersParams) (*types.Exc
 
 	exchangesListURL := fmt.Sprintf("%s/exchanges/%s/tickers?%s", c.baseURL, params.ExchangeID, params.encodeQueryParamsWithoutExchangeID())
 
-	resp, err := c.makeHTTPRequest(exchangesListURL)
+	resp, header, err := c.makeHTTPRequestWithHeader(exchangesListURL)
 	if err != nil {
 		return nil, err
 	}
 
-	data := &types.ExchangeTickers{}
+	data := &types.ExchangeTickers{
+		BasePageResult: types.NewBasePageResult(header, params.PageNo),
+	}
 	if err = json.Unmarshal(resp, data); err != nil {
 		return nil, err
 	}

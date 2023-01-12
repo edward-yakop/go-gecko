@@ -224,7 +224,7 @@ func (c *Client) CoinsIDTickers(params CoinsIDTickersParam) (*types.CoinsIDTicke
 	}
 
 	data := &types.CoinsIDTickers{
-		BasePageResult: types.NewBasePageResult(header),
+		BasePageResult: types.NewBasePageResult(header, params.PageNo),
 	}
 	if err = json.Unmarshal(resp, data); err != nil {
 		return nil, err

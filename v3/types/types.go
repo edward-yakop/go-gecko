@@ -1,8 +1,8 @@
 package types
 
 import (
+	"math"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -32,8 +32,9 @@ func toExpires(value []string) time.Time {
 
 func toMaxAge(value []string) time.Duration {
 	if len(value) >= 1 {
-		if index := strings.Index(value[0], "max-age="); index != -1 {
-			if age, err := strconv.Atoi(value[0][index+8:]); err == nil {
+		v := value[0]
+		if index := strings.Index(v, "max-age="); index != -1 {
+			if age, err := strconv.Atoi(v[index+8:]); err == nil {
 				return time.Second * time.Duration(age)
 			}
 		}
@@ -50,51 +51,30 @@ type BasePageResult struct {
 	TotalEntriesCount int
 }
 
-func NewBasePageResult(header http.Header) BasePageResult {
-	linkValue := header["Link"]
-	return BasePageResult{
-		BaseResult:        NewBaseResult(header),
-		NextPageIndex:     toNextPageIndex(linkValue),
-		LastPageIndex:     toLastPageIndex(linkValue),
-		PageSize:          toInt(header["Per-Page"], -1),
-		TotalEntriesCount: toInt(header["Total"], -1),
+func NewBasePageResult(header http.Header, currentPageIndex int) BasePageResult {
+	if currentPageIndex < 1 {
+		currentPageIndex = 1
 	}
-}
 
-func toNextPageIndex(value []string) int {
-	return getPageIndex(value, ">; rel=\"next\"")
-}
-
-func getPageIndex(value []string, snippets string) int {
-	if len(value) >= 1 {
-		candidates := strings.Split(value[0], ",")
-		for _, c := range candidates {
-			c = strings.TrimSpace(c)
-
-			index := strings.Index(c, snippets)
-			if index == -1 {
-				continue
-			}
-
-			if u, uErr := url.Parse(c[1:index]); uErr == nil {
-				if query, qErr := url.ParseQuery(u.RawQuery); qErr == nil {
-					if pageStr := query.Get("page"); pageStr != "" {
-						if pageIndex, pErr := strconv.Atoi(pageStr); pErr == nil {
-							return pageIndex
-						}
-					}
-				}
-			}
-
-			return -1
+	total := toInt(header["Total"], -1)
+	pageSize := toInt(header["Per-Page"], -1)
+	lastPageIndex := -1
+	nextPageIndex := -1
+	if total != -1 && pageSize != -1 {
+		lastPageIndex = int(math.Ceil(float64(total) / float64(pageSize)))
+		nextPageIndex = currentPageIndex + 1
+		if nextPageIndex > lastPageIndex {
+			nextPageIndex = -1
 		}
 	}
 
-	return -1
-}
-
-func toLastPageIndex(value []string) int {
-	return getPageIndex(value, ">; rel=\"last\"")
+	return BasePageResult{
+		BaseResult:        NewBaseResult(header),
+		NextPageIndex:     nextPageIndex,
+		LastPageIndex:     lastPageIndex,
+		PageSize:          pageSize,
+		TotalEntriesCount: total,
+	}
 }
 
 func toInt(value []string, defaultValue int) int {
@@ -275,6 +255,7 @@ type ExchangeDetail struct {
 }
 
 type ExchangeTickers struct {
+	BasePageResult
 	Name    string       `json:"name"`
 	Tickers []TickerItem `json:"tickers"`
 }

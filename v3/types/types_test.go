@@ -16,9 +16,9 @@ func Test_toExpires(t *testing.T) {
 		args args
 		want time.Time
 	}{
-		{"nil", args{nil}, time.Time{}},
-		{"happy path", args{arrStrings("Wed, 11 Jan 2023 12:08:21 GMT")}, time.Date(2023, time.January, 11, 12, 8, 21, 0, time.UTC)},
-		{"invalid string", args{arrStrings("whatever")}, time.Time{}},
+		{"invalid: nil", args{nil}, time.Time{}},
+		{"valid: happy path", args{arrStrings("Wed, 11 Jan 2023 12:08:21 GMT")}, time.Date(2023, time.January, 11, 12, 8, 21, 0, time.UTC)},
+		{"invalid: not expected format", args{arrStrings("whatever")}, time.Time{}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -42,9 +42,9 @@ func Test_toMaxAge(t *testing.T) {
 		args args
 		want time.Duration
 	}{
-		{"nil", args{nil}, time.Nanosecond},
-		{"happy path", args{arrStrings("public, max-age=120")}, secs(120)},
-		{"invalid string", args{arrStrings("invalid string")}, time.Nanosecond},
+		{"invalid: nil", args{nil}, time.Nanosecond},
+		{"valid: happy path", args{arrStrings("public, max-age=120")}, secs(120)},
+		{"invalid: not int", args{arrStrings("invalid string")}, time.Nanosecond},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -68,59 +68,58 @@ func TestNewBaseResult(t *testing.T) {
 	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.CacheExpires)
 }
 
-func Test_toNextPageIndex(t *testing.T) {
-	type args struct {
-		value []string
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{"nil", args{nil}, -1},
-		{"happy path", args{arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=2\u003e; rel=\"next\"")}, 2},
-		{"not defined", args{arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\"")}, -1},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, toNextPageIndex(tt.args.value), "toNextPageIndex(%v)", tt.args.value)
-		})
-	}
-}
-
-func Test_toLastPageIndex(t *testing.T) {
-	type args struct {
-		value []string
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{"nil", args{nil}, -1},
-		{"happy path", args{arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=2\u003e; rel=\"next\"")}, 63},
-		{"not defined", args{arrStrings("<https://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true&include_exchange_logo=true&order=volume_desc&page=2>; rel=\"next\"")}, -1},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, toLastPageIndex(tt.args.value), "toLastPageIndex(%v)", tt.args.value)
-		})
-	}
-}
-
 func TestNewBasePageResult(t *testing.T) {
 	h := http.Header{
 		"Cache-Control": arrStrings("public, max-age=120"),
 		"Expires":       arrStrings("Wed, 11 Jan 2023 12:08:23 GMT"),
-		"Link":          arrStrings("\u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=63\u003e; rel=\"last\", \u003chttps://api.coingecko.com/api/v3/coins/bitcoin/tickers?depth=true\u0026include_exchange_logo=true\u0026order=volume_desc\u0026page=2\u003e; rel=\"next\""),
 		"Per-Page":      arrStrings("100"),
 		"Total":         arrStrings("6247"),
 	}
+	type args struct {
+		currentPageIndex int
+	}
+	tests := []struct {
+		name              string
+		args              args
+		wantNextPageIndex int
+	}{
+		{"invalid: before first page", args{-10}, 2},
+		{"valid: non-last page", args{1}, 2},
+		{"valid: last page", args{63}, -1},
+		{"invalid: beyond last page", args{64}, -1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := NewBasePageResult(h, tt.args.currentPageIndex)
 
-	result := NewBasePageResult(h)
-	assert.Equal(t, secs(120), result.CacheMaxAge)
-	assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), result.CacheExpires)
-	assert.Equal(t, 2, result.NextPageIndex)
-	assert.Equal(t, 63, result.LastPageIndex)
-	assert.Equal(t, 6247, result.TotalEntriesCount)
+			assert.Equal(t, secs(120), got.CacheMaxAge)
+			assert.Equal(t, time.Date(2023, time.January, 11, 12, 8, 23, 0, time.UTC), got.CacheExpires)
+			assert.Equal(t, tt.wantNextPageIndex, got.NextPageIndex)
+			assert.Equal(t, 63, got.LastPageIndex)
+			assert.Equal(t, 6247, got.TotalEntriesCount)
+		})
+	}
+}
+
+func Test_toInt(t *testing.T) {
+	type args struct {
+		value        []string
+		defaultValue int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"invalid: nil", args{nil, -1}, -1},
+		{"valid: 1", args{arrStrings("1"), -1}, 1},
+		{"valid: 100", args{arrStrings("100"), -1}, 100},
+		{"invalid: non int", args{arrStrings("ABC"), -3}, -3},
+		{"invalid: float", args{arrStrings("123.3"), -2}, -2},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, toInt(tt.args.value, tt.args.defaultValue), "toInt(%v, %v)", tt.args.value, tt.args.defaultValue)
+		})
+	}
 }

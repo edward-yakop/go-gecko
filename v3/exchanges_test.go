@@ -74,7 +74,7 @@ func TestClient_ExchangesID(t *testing.T) {
 }
 
 func TestClient_ExchangesIDTickers(t *testing.T) {
-	err := setupGock("json/exchanges_tickers.json", "/exchanges/binance/tickers")
+	err := setupGockWithHeader("json/exchanges_tickers.json", "json/common_page.headers.json", "/exchanges/binance/tickers")
 	require.NoError(t, err)
 
 	got, err := c.ExchangesIDTickers(ExchangesIDTickersParams{
@@ -87,6 +87,8 @@ func TestClient_ExchangesIDTickers(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, got)
+
+	assert.Equal(t, commonBasePageResult, got.BasePageResult)
 
 	assert.Equal(t, "Binance", got.Name, "got.Name")
 	assert.Len(t, got.Tickers, 13, "len(got.Tickers)")
