@@ -18,11 +18,7 @@ var c = NewClient(nil)
 var mockURL = "https://api.coingecko.com/api/v3"
 
 // Util: Setup Gock
-func setupGock(filename string, url string) error {
-	return setupGockWithHeader(filename, "", url)
-}
-
-func setupGockWithHeader(bodyFileName, headerFileName, url string) error {
+func setupGock(bodyFileName, headerFileName, url string) error {
 	bodyBA, err := os.ReadFile(bodyFileName)
 	if err != nil {
 		return fmt.Errorf("fail to read %s: %v", bodyFileName, err)

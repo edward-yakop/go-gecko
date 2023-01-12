@@ -112,7 +112,10 @@ type SimplePrice struct {
 }
 
 // SimpleSupportedVSCurrencies https://api.coingecko.com/api/v3/simple/supported_vs_currencies
-type SimpleSupportedVSCurrencies []string
+type SimpleSupportedVSCurrencies struct {
+	BaseResult
+	Entries []string
+}
 
 type CoinList struct {
 	BaseResult
@@ -277,10 +280,10 @@ type ExchangeTickers struct {
 	Tickers []TickerItem `json:"tickers"`
 }
 
-// ExchangeRatesResponse https://api.coingecko.com/api/v3/exchange_rates
-type ExchangeRatesResponse struct {
+// ExchangeRates https://api.coingecko.com/api/v3/exchange_rates
+type ExchangeRates struct {
 	BaseResult
-	Rates ExchangeRates `json:"rates"`
+	Rates map[string]ExchangeRatesItem `json:"rates"`
 }
 
 // GlobalResponse https://api.coingecko.com/api/v3/global

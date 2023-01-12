@@ -9,7 +9,7 @@ import (
 )
 
 func TestClient_Exchanges(t *testing.T) {
-	err := setupGockWithHeader("json/exchanges.json", "json/common_page.headers.json", "/exchanges")
+	err := setupGock("json/exchanges.json", "json/common_page.headers.json", "/exchanges")
 	require.NoError(t, err)
 
 	got, err := c.Exchanges(ExchangesParam{
@@ -37,7 +37,7 @@ func TestClient_Exchanges(t *testing.T) {
 }
 
 func TestClient_ExchangesList(t *testing.T) {
-	err := setupGockWithHeader("json/exchanges_list.json", "json/common.headers.json", "/exchanges/list")
+	err := setupGock("json/exchanges_list.json", "json/common.headers.json", "/exchanges/list")
 	require.NoError(t, err)
 
 	got, err := c.ExchangesList()
@@ -52,7 +52,7 @@ func TestClient_ExchangesList(t *testing.T) {
 }
 
 func TestClient_ExchangesID(t *testing.T) {
-	err := setupGockWithHeader("json/exchanges_id.json", "json/common.headers.json", "/exchanges/binance")
+	err := setupGock("json/exchanges_id.json", "json/common.headers.json", "/exchanges/binance")
 	require.NoError(t, err)
 
 	got, err := c.ExchangesID("binance")
@@ -76,7 +76,7 @@ func TestClient_ExchangesID(t *testing.T) {
 }
 
 func TestClient_ExchangesIDTickers(t *testing.T) {
-	err := setupGockWithHeader("json/exchanges_tickers.json", "json/common_page.headers.json", "/exchanges/binance/tickers")
+	err := setupGock("json/exchanges_tickers.json", "json/common_page.headers.json", "/exchanges/binance/tickers")
 	require.NoError(t, err)
 
 	got, err := c.ExchangesIDTickers(ExchangesIDTickersParams{

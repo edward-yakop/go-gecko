@@ -104,7 +104,7 @@ func headerToMap(header http.Header, keys ...string) map[string][]string {
 }
 
 // makeHTTPRequest HTTP request helper
-func (c *Client) makeHTTPRequestWithHeader(url string) ([]byte, http.Header, error) {
+func (c *Client) makeHTTPRequest(url string) ([]byte, http.Header, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, nil, err
@@ -120,12 +120,6 @@ func (c *Client) makeHTTPRequestWithHeader(url string) ([]byte, http.Header, err
 	}
 
 	return resp, header, err
-}
-
-func (c *Client) makeHTTPRequest(url string) ([]byte, error) {
-	resp, _, err := c.makeHTTPRequestWithHeader(url)
-
-	return resp, err
 }
 
 func firstError(fst, snd error) error {

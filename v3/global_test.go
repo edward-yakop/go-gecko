@@ -7,7 +7,7 @@ import (
 )
 
 func TestClient_Global(t *testing.T) {
-	err := setupGockWithHeader("json/global.json", "json/common.headers.json", "/global")
+	err := setupGock("json/global.json", "json/common.headers.json", "/global")
 	require.NoError(t, err)
 
 	got, err := c.Global()

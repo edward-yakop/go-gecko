@@ -13,6 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Total currencies", len(*currencies))
-	fmt.Println(*currencies)
+	fmt.Println("Total currencies", currencies.Entries)
+	fmt.Println(currencies.Entries)
 }

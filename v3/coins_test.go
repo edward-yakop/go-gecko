@@ -8,7 +8,7 @@ import (
 )
 
 func TestCoinsList(t *testing.T) {
-	err := setupGockWithHeader("json/coins_list.json", "json/common.headers.json", "/coins/list")
+	err := setupGock("json/coins_list.json", "json/common.headers.json", "/coins/list")
 	require.NoError(t, err)
 
 	list, err := c.CoinsList()
@@ -21,7 +21,7 @@ func TestCoinsList(t *testing.T) {
 }
 
 func TestClient_CoinsMarket(t *testing.T) {
-	err := setupGockWithHeader("json/coins_market.json", "json/common.headers.json", "/coins/markets")
+	err := setupGock("json/coins_market.json", "json/common.headers.json", "/coins/markets")
 	require.NoError(t, err)
 
 	market, err := c.CoinsMarket(CoinsMarketParams{
@@ -70,7 +70,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 }
 
 func TestCoinsID(t *testing.T) {
-	err := setupGockWithHeader("json/coins_id.json", "json/common.headers.json", "/coins/dogecoin")
+	err := setupGock("json/coins_id.json", "json/common.headers.json", "/coins/dogecoin")
 	require.NoError(t, err)
 
 	coin, err := c.CoinsID(CoinsIDParams{
@@ -102,7 +102,7 @@ func TestCoinsID(t *testing.T) {
 }
 
 func TestClient_CoinsIDTickers(t *testing.T) {
-	err := setupGockWithHeader("json/coins_id_tickers.json", "json/common_page.headers.json", "/coins/bitcoin/tickers")
+	err := setupGock("json/coins_id_tickers.json", "json/common_page.headers.json", "/coins/bitcoin/tickers")
 	require.NoError(t, err)
 
 	coinsIDTickers, err := c.CoinsIDTickers(CoinsIDTickersParam{
@@ -135,7 +135,7 @@ func TestClient_CoinsIDTickers(t *testing.T) {
 }
 
 func TestClient_CoinsIDHistory(t *testing.T) {
-	err := setupGockWithHeader("json/coins_id_history.json", "json/common.headers.json", "/coins/bitcoin/history")
+	err := setupGock("json/coins_id_history.json", "json/common.headers.json", "/coins/bitcoin/history")
 	require.NoError(t, err)
 
 	history, err := c.CoinsIDHistory(CoinsIDHistoryParams{
@@ -160,7 +160,7 @@ func TestClient_CoinsIDHistory(t *testing.T) {
 }
 
 func TestClient_CoinsIDMarketChart(t *testing.T) {
-	err := setupGockWithHeader("json/coins_id_market_chart.json", "json/common.headers.json", "/coins/bitcoin/market_chart")
+	err := setupGock("json/coins_id_market_chart.json", "json/common.headers.json", "/coins/bitcoin/market_chart")
 	require.NoError(t, err)
 
 	mc, err := c.CoinsIDMarketChart(CoinsIDMarketChartParams{

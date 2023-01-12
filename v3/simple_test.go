@@ -8,7 +8,7 @@ import (
 )
 
 func TestSimplePrice(t *testing.T) {
-	err := setupGockWithHeader("json/simple_price.json", "json/common.headers.json", "/simple/price")
+	err := setupGock("json/simple_price.json", "json/common.headers.json", "/simple/price")
 	require.NoError(t, err)
 
 	sp, err := c.SimplePrice(SimplePriceParams{
@@ -86,9 +86,14 @@ func TestClient_parseSimplePriceItem(t *testing.T) {
 }
 
 func TestSimpleSupportedVSCurrencies(t *testing.T) {
-	err := setupGock("json/simple_supported_vs_currencies.json", "/simple/supported_vs_currencies")
-	s, err := c.SimpleSupportedVSCurrencies()
+	err := setupGock("json/simple_supported_vs_currencies.json", "json/common.headers.json", "/simple/supported_vs_currencies")
 	require.NoError(t, err)
 
-	assert.Len(t, *s, 54)
+	s, err := c.SimpleSupportedVSCurrencies()
+	require.NoError(t, err)
+	require.NotNil(t, s)
+
+	assert.Equal(t, commonBaseResult, s.BaseResult)
+
+	assert.Len(t, s.Entries, 54)
 }

@@ -9,7 +9,7 @@ import (
 // Global https://api.coingecko.com/api/v3/global
 func (c *Client) Global() (*types.Global, error) {
 	globalURL := fmt.Sprintf("%s/global", c.baseURL)
-	resp, header, err := c.makeHTTPRequestWithHeader(globalURL)
+	resp, header, err := c.makeHTTPRequest(globalURL)
 	if err != nil {
 		return nil, err
 	}

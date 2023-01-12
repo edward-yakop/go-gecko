@@ -7,7 +7,7 @@ import (
 )
 
 func TestPing(t *testing.T) {
-	err := setupGockWithHeader("json/ping.json", "json/common.headers.json", "/ping")
+	err := setupGock("json/ping.json", "json/common.headers.json", "/ping")
 
 	ping, err := c.Ping()
 	require.NoError(t, err)

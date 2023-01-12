@@ -10,7 +10,7 @@ import (
 func (c *Client) Ping() (*types.Ping, error) {
 	pingURL := fmt.Sprintf("%s/ping", c.baseURL)
 
-	resp, header, err := c.makeHTTPRequestWithHeader(pingURL)
+	resp, header, err := c.makeHTTPRequest(pingURL)
 	if err != nil {
 		return nil, err
 	}

@@ -35,7 +35,7 @@ func (p ExchangesParam) encodeQueryParams() string {
 func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 	exchangesURL := fmt.Sprintf("%s/exchanges?%s", c.baseURL, params.encodeQueryParams())
 
-	resp, header, err := c.makeHTTPRequestWithHeader(exchangesURL)
+	resp, header, err := c.makeHTTPRequest(exchangesURL)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 func (c *Client) ExchangesList() (*types.ExchangesList, error) {
 	exchangesListURL := fmt.Sprintf("%s/exchanges/list", c.baseURL)
 
-	resp, header, err := c.makeHTTPRequestWithHeader(exchangesListURL)
+	resp, header, err := c.makeHTTPRequest(exchangesListURL)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (c *Client) ExchangesID(exchangeID string) (*types.ExchangeDetail, error) {
 
 	exchangesListURL := fmt.Sprintf("%s/exchanges/%s", c.baseURL, exchangeID)
 
-	resp, header, err := c.makeHTTPRequestWithHeader(exchangesListURL)
+	resp, header, err := c.makeHTTPRequest(exchangesListURL)
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (c *Client) ExchangesIDTickers(params ExchangesIDTickersParams) (*types.Exc
 
 	exchangesListURL := fmt.Sprintf("%s/exchanges/%s/tickers?%s", c.baseURL, params.ExchangeID, params.encodeQueryParamsWithoutExchangeID())
 
-	resp, header, err := c.makeHTTPRequestWithHeader(exchangesListURL)
+	resp, header, err := c.makeHTTPRequest(exchangesListURL)
 	if err != nil {
 		return nil, err
 	}

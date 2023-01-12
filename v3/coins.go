@@ -12,7 +12,7 @@ import (
 // CoinsList /coins/list
 func (c *Client) CoinsList() (*types.CoinList, error) {
 	coinsListURL := fmt.Sprintf("%s/coins/list", c.baseURL)
-	resp, header, err := c.makeHTTPRequestWithHeader(coinsListURL)
+	resp, header, err := c.makeHTTPRequest(coinsListURL)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func (c *Client) CoinsMarket(params CoinsMarketParams) (*types.CoinsMarket, erro
 	}
 
 	coinsMarketsURL := fmt.Sprintf("%s/coins/markets?%s", c.baseURL, params.encodeQueryParams())
-	resp, header, err := c.makeHTTPRequestWithHeader(coinsMarketsURL)
+	resp, header, err := c.makeHTTPRequest(coinsMarketsURL)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +159,7 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 	}
 
 	coinsURL := fmt.Sprintf("%s/coins/%s?%s", c.baseURL, params.CoinID, params.encodeNonIDQueryParams())
-	resp, header, err := c.makeHTTPRequestWithHeader(coinsURL)
+	resp, header, err := c.makeHTTPRequest(coinsURL)
 	if err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func (c *Client) CoinsIDTickers(params CoinsIDTickersParam) (*types.CoinsIDTicke
 	}
 
 	coinsIDURL := fmt.Sprintf("%s/coins/%s/tickers?%s", c.baseURL, params.CoinsID, params.encodeNonIDQueryParams())
-	resp, header, err := c.makeHTTPRequestWithHeader(coinsIDURL)
+	resp, header, err := c.makeHTTPRequest(coinsIDURL)
 	if err != nil {
 		return nil, err
 	}
@@ -267,7 +267,7 @@ func (c *Client) CoinsIDHistory(params CoinsIDHistoryParams) (*types.CoinsIDHist
 	}
 
 	coinsIDHistoryURL := fmt.Sprintf("%s/coins/%s/history?%s", c.baseURL, params.CoinID, params.encodeNonIDQueryParams())
-	resp, header, err := c.makeHTTPRequestWithHeader(coinsIDHistoryURL)
+	resp, header, err := c.makeHTTPRequest(coinsIDHistoryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -320,7 +320,7 @@ func (c *Client) CoinsIDMarketChart(params CoinsIDMarketChartParams) (*types.Coi
 	}
 
 	coinsIDMarketChartURL := fmt.Sprintf("%s/coins/%s/market_chart?%s", c.baseURL, params.CoinsID, params.encodeNonIDQueryParams())
-	resp, header, err := c.makeHTTPRequestWithHeader(coinsIDMarketChartURL)
+	resp, header, err := c.makeHTTPRequest(coinsIDMarketChartURL)
 	if err != nil {
 		return nil, err
 	}

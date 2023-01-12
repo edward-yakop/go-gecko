@@ -9,11 +9,11 @@ import (
 
 func main() {
 	cg := gecko.NewClient(nil)
-	rate, err := cg.ExchangeRates()
+	exchangeRates, err := cg.ExchangeRates()
 	if err != nil {
 		log.Fatal(err)
 	}
-	r := (*rate)["btc"]
+	r := exchangeRates.Rates["btc"]
 	fmt.Println(r.Name)
 	fmt.Println(r.Unit)
 	fmt.Println(r.Value)

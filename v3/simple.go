@@ -77,7 +77,7 @@ func (c *Client) SimplePrice(params SimplePriceParams) (*types.SimplePrice, erro
 	}
 
 	simplePriceURL := fmt.Sprintf("%s/simple/price?%s", c.baseURL, params.encode())
-	resp, header, err := c.makeHTTPRequestWithHeader(simplePriceURL)
+	resp, header, err := c.makeHTTPRequest(simplePriceURL)
 	if err != nil {
 		return nil, err
 	}
@@ -174,15 +174,18 @@ func (c *Client) parseSimplePriceItem(coinID string, ba []byte) (*types.SimplePr
 // SimpleSupportedVSCurrencies /simple/supported_vs_currencies
 func (c *Client) SimpleSupportedVSCurrencies() (*types.SimpleSupportedVSCurrencies, error) {
 	simpleURL := fmt.Sprintf("%s/simple/supported_vs_currencies", c.baseURL)
-	resp, err := c.makeHTTPRequest(simpleURL)
+	resp, header, err := c.makeHTTPRequest(simpleURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data *types.SimpleSupportedVSCurrencies
-	if err = json.Unmarshal(resp, &data); err != nil {
+	r := &types.SimpleSupportedVSCurrencies{
+		BaseResult: types.NewBaseResult(header),
+		Entries:    make([]string, 0),
+	}
+	if err = json.Unmarshal(resp, &r.Entries); err != nil {
 		return nil, err
 	}
 
-	return data, nil
+	return r, nil
 }
