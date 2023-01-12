@@ -7,12 +7,14 @@ import (
 )
 
 func TestClient_Global(t *testing.T) {
-	err := setupGock("json/global.json", "/global")
+	err := setupGockWithHeader("json/global.json", "json/common.headers.json", "/global")
 	require.NoError(t, err)
 
 	got, err := c.Global()
 	require.NoError(t, err)
 	require.NotNil(t, got)
+
+	assert.Equal(t, commonBaseResult, got.BaseResult)
 
 	assert.Equal(t, 12733, got.ActiveCryptocurrencies, "got.ActiveCryptocurrencies")
 	assert.Equal(t, 0, got.UpcomingICOs, "got.UpcomingICOs")

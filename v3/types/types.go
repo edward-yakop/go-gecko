@@ -273,5 +273,5 @@ type ExchangeRatesResponse struct {
 
 // GlobalResponse https://api.coingecko.com/api/v3/global
 type GlobalResponse struct {
-	Data Global `json:"data"`
+	Data *Global `json:"data"`
 }

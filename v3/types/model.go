@@ -299,6 +299,7 @@ type ExchangeRatesItem struct {
 
 // Global for data of /global
 type Global struct {
+	BaseResult
 	ActiveCryptocurrencies          int           `json:"active_cryptocurrencies"`
 	UpcomingICOs                    int           `json:"upcoming_icos"`
 	EndedICOs                       int           `json:"ended_icos"`
