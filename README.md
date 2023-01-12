@@ -20,7 +20,7 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 |          /simple/price          | :heavy_check_mark: | :heavy_check_mark: |         SimplePrice         |
 | /simple/supported_vs_currencies | :heavy_check_mark: | :heavy_check_mark: | SimpleSupportedVSCurrencies |
 |           /coins/list           | :heavy_check_mark: | :heavy_check_mark: |          CoinsList          |
-|          /coins/market          | :heavy_check_mark: | :heavy_check_mark: |         CoinsMarket         |
+|         /coins/markets          | :heavy_check_mark: | :heavy_check_mark: |        CoinsMarkets         |
 |           /coins/{id}           | :heavy_check_mark: | :heavy_check_mark: |           CoinsID           |
 |       /coins/{id}/tickers       | :heavy_check_mark: | :heavy_check_mark: |       CoinsIDTickers        |
 |       /coins/{id}/history       | :heavy_check_mark: | :heavy_check_mark: |       CoinsIDHistory        |

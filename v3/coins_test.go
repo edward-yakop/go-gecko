@@ -24,7 +24,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 	err := setupGock("json/coins_market.json", "json/common.headers.json", "/coins/markets")
 	require.NoError(t, err)
 
-	market, err := c.CoinsMarket(CoinsMarketParams{
+	market, err := c.CoinsMarkets(CoinsMarketParams{
 		VsCurrency: "usd",
 		CoinIds:    []string{"bitcoin", "ethereum", "steem"},
 		Order:      types.CoinMarketOrderVolumeDesc,

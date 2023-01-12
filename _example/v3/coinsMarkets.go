@@ -21,7 +21,7 @@ func main() {
 		geckoTypes.PriceChangePercentage1Y,
 	}
 
-	market, err := cg.CoinsMarket(gecko.CoinsMarketParams{
+	market, err := cg.CoinsMarkets(gecko.CoinsMarketParams{
 		VsCurrency:            "usd",
 		CoinIds:               []string{"bitcoin", "ethereum", "steem"},
 		Order:                 geckoTypes.CoinMarketOrderMarketCapDesc,
@@ -37,7 +37,7 @@ func main() {
 	fmt.Println(market.Entries)
 
 	// with pagination instead
-	market, err = cg.CoinsMarket(gecko.CoinsMarketParams{
+	market, err = cg.CoinsMarkets(gecko.CoinsMarketParams{
 		VsCurrency:            "usd",
 		Order:                 geckoTypes.CoinMarketOrderMarketCapDesc,
 		PageSize:              10,

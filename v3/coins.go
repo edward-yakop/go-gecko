@@ -98,8 +98,8 @@ func (p CoinsMarketParams) encodeQueryParams() string {
 	return params.Encode()
 }
 
-// CoinsMarket /coins/market
-func (c *Client) CoinsMarket(params CoinsMarketParams) (*types.CoinsMarket, error) {
+// CoinsMarkets /coins/markets
+func (c *Client) CoinsMarkets(params CoinsMarketParams) (*types.CoinsMarkets, error) {
 	if err := params.Validate(); err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (c *Client) CoinsMarket(params CoinsMarketParams) (*types.CoinsMarket, erro
 		return nil, err
 	}
 
-	data := &types.CoinsMarket{
+	data := &types.CoinsMarkets{
 		BaseResult: types.NewBaseResult(header),
 		Entries:    []types.CoinsMarketItem{},
 	}
