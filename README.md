@@ -14,23 +14,23 @@ gopher resources from [free-gophers-pack](https://github.com/MariaLetta/free-gop
 
 [Refer to CoinGecko official API](https://www.coingecko.com/api)
 
-|            Endpoint             |       Status       |      Testing       |            Function            |
-|:-------------------------------:|:------------------:|:------------------:|:------------------------------:|
-|              /ping              | :heavy_check_mark: | :heavy_check_mark: |              Ping              |
-|          /simple/price          | :heavy_check_mark: | :heavy_check_mark: | SimpleSinglePrice, SimplePrice |
-| /simple/supported_vs_currencies | :heavy_check_mark: | :heavy_check_mark: |  SimpleSupportedVSCurrencies   |
-|           /coins/list           | :heavy_check_mark: | :heavy_check_mark: |           CoinsList            |
-|          /coins/market          | :heavy_check_mark: | :heavy_check_mark: |          CoinsMarket           |
-|           /coins/{id}           | :heavy_check_mark: | :heavy_check_mark: |            CoinsID             |
-|       /coins/{id}/tickers       | :heavy_check_mark: | :heavy_check_mark: |         CoinsIDTickers         |
-|       /coins/{id}/history       | :heavy_check_mark: | :heavy_check_mark: |         CoinsIDHistory         |
-|    /coins/{id}/market_chart     | :heavy_check_mark: | :heavy_check_mark: |       CoinsIDMarketChart       |
-|           /exchanges            | :heavy_check_mark: | :heavy_check_mark: |           Exchanges            |
-|         /exchanges/{id}         | :heavy_check_mark: | :heavy_check_mark: |          ExchangesID           |
-|         /exchanges/list         | :heavy_check_mark: | :heavy_check_mark: |         ExchangesList          |
-|     /exchanges/{id}/tickers     | :heavy_check_mark: | :heavy_check_mark: |        ExchangesTickers        |
-|         /exchange_rates         | :heavy_check_mark: | :heavy_check_mark: |          ExchangeRate          |
-|             /global             | :heavy_check_mark: | :heavy_check_mark: |             Global             |
+|            Endpoint             |       Status       |      Testing       |          Function           |
+|:-------------------------------:|:------------------:|:------------------:|:---------------------------:|
+|              /ping              | :heavy_check_mark: | :heavy_check_mark: |            Ping             |
+|          /simple/price          | :heavy_check_mark: | :heavy_check_mark: |         SimplePrice         |
+| /simple/supported_vs_currencies | :heavy_check_mark: | :heavy_check_mark: | SimpleSupportedVSCurrencies |
+|           /coins/list           | :heavy_check_mark: | :heavy_check_mark: |          CoinsList          |
+|          /coins/market          | :heavy_check_mark: | :heavy_check_mark: |         CoinsMarket         |
+|           /coins/{id}           | :heavy_check_mark: | :heavy_check_mark: |           CoinsID           |
+|       /coins/{id}/tickers       | :heavy_check_mark: | :heavy_check_mark: |       CoinsIDTickers        |
+|       /coins/{id}/history       | :heavy_check_mark: | :heavy_check_mark: |       CoinsIDHistory        |
+|    /coins/{id}/market_chart     | :heavy_check_mark: | :heavy_check_mark: |     CoinsIDMarketChart      |
+|           /exchanges            | :heavy_check_mark: | :heavy_check_mark: |          Exchanges          |
+|         /exchanges/{id}         | :heavy_check_mark: | :heavy_check_mark: |         ExchangesID         |
+|         /exchanges/list         | :heavy_check_mark: | :heavy_check_mark: |        ExchangesList        |
+|     /exchanges/{id}/tickers     | :heavy_check_mark: | :heavy_check_mark: |      ExchangesTickers       |
+|         /exchange_rates         | :heavy_check_mark: | :heavy_check_mark: |        ExchangeRate         |
+|             /global             | :heavy_check_mark: | :heavy_check_mark: |           Global            |
 
 ## Usage
 

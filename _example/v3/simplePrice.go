@@ -10,14 +10,20 @@ import (
 func main() {
 	cg := gecko.NewClient(nil)
 
-	ids := []string{"bitcoin", "ethereum"}
-	vc := []string{"usd", "myr"}
-	sp, err := cg.SimplePrice(ids, vc)
+	sp, err := cg.SimplePrice(gecko.SimplePriceParams{
+		CoinIDs:              []string{"bitcoin", "ethereum"},
+		VsCurrencies:         []string{"usd", "myr"},
+		IncludeMarketCap:     true,
+		Include24HrVolume:    true,
+		Include24HrChange:    true,
+		IncludeLastUpdatedAt: true,
+		Precision:            "full",
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
-	bitcoin := (*sp)["bitcoin"]
-	eth := (*sp)["ethereum"]
-	fmt.Println(fmt.Sprintf("Bitcoin is worth %f usd (myr %f)", bitcoin["usd"], bitcoin["myr"]))
-	fmt.Println(fmt.Sprintf("Ethereum is worth %f usd (myr %f)", eth["usd"], eth["myr"]))
+	bitcoin := sp.Coins["bitcoin"]
+	eth := sp.Coins["ethereum"]
+	fmt.Println(fmt.Sprintf("Bitcoin is worth %f usd (myr %f)", bitcoin.Currencies["usd"].Price, bitcoin.Currencies["myr"].Price))
+	fmt.Println(fmt.Sprintf("Ethereum is worth %f usd (myr %f)", eth.Currencies["usd"].Price, eth.Currencies["myr"].Price))
 }

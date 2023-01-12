@@ -93,11 +93,22 @@ type Ping struct {
 	GeckoSays string `json:"gecko_says"`
 }
 
-// SimpleSinglePrice https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd
-type SimpleSinglePrice struct {
-	ID          string
-	Currency    string
-	MarketPrice float64
+type SimplePriceCurrencyItem struct {
+	Price               float64
+	MarketCap           *float64
+	Volume24H           *float64
+	ChangePercentage24H *float64
+}
+
+type SimplePriceItem struct {
+	Currencies    map[string]*SimplePriceCurrencyItem
+	LastUpdatedAt time.Time
+}
+
+// SimplePrice https://api.coingecko.com/api/v3/simple/price
+type SimplePrice struct {
+	BaseResult
+	Coins map[string]*SimplePriceItem
 }
 
 // SimpleSupportedVSCurrencies https://api.coingecko.com/api/v3/simple/supported_vs_currencies
