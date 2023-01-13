@@ -55,7 +55,7 @@ func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 
 		var e types.Exchange
 		if err = json.Unmarshal(ba, &e); err == nil {
-			m[e.Id] = e
+			m[e.ID] = e
 		}
 	})
 

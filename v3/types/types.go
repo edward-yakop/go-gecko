@@ -9,8 +9,8 @@ import (
 )
 
 type BaseResult struct {
-	CacheMaxAge  time.Duration
-	CacheExpires time.Time
+	CacheMaxAge  time.Duration `json:"cacheMaxAge,omitempty"`
+	CacheExpires time.Time     `json:"cacheExpires"`
 }
 
 func NewBaseResult(header http.Header) BaseResult {
@@ -45,10 +45,10 @@ func toMaxAge(value []string) time.Duration {
 
 type BasePageResult struct {
 	BaseResult
-	NextPageIndex     int
-	LastPageIndex     int
-	PageSize          int
-	TotalEntriesCount int
+	NextPageIndex     int `json:"nextPageIndex,omitempty"`
+	LastPageIndex     int `json:"lastPageIndex,omitempty"`
+	PageSize          int `json:"pageSize,omitempty"`
+	TotalEntriesCount int `json:"totalEntriesCount,omitempty"`
 }
 
 func NewBasePageResult(header http.Header, currentPageIndex int) BasePageResult {
@@ -94,38 +94,38 @@ type Ping struct {
 }
 
 type SimplePriceCurrencyItem struct {
-	Price               float64
-	MarketCap           *float64
-	Volume24H           *float64
-	ChangePercentage24H *float64
+	Price               float64  `json:"price,omitempty"`
+	MarketCap           *float64 `json:"marketCap,omitempty"`
+	Volume24H           *float64 `json:"volume24H,omitempty"`
+	ChangePercentage24H *float64 `json:"changePercentage24H,omitempty"`
 }
 
 type SimplePriceItem struct {
-	Currencies    map[string]*SimplePriceCurrencyItem
-	LastUpdatedAt time.Time
+	Currencies    map[string]*SimplePriceCurrencyItem `json:"currencies,omitempty"`
+	LastUpdatedAt time.Time                           `json:"lastUpdatedAt"`
 }
 
 // SimplePrice https://api.coingecko.com/api/v3/simple/price
 type SimplePrice struct {
 	BaseResult
-	Coins map[string]*SimplePriceItem
+	Coins map[string]*SimplePriceItem `json:"coins"`
 }
 
 // SimpleSupportedVSCurrencies https://api.coingecko.com/api/v3/simple/supported_vs_currencies
 type SimpleSupportedVSCurrencies struct {
 	BaseResult
-	Entries []string
+	Entries []string `json:"entries"`
 }
 
 type CoinList struct {
 	BaseResult
-	Entries []CoinsListItem
+	Entries []CoinsListItem `json:"entries"`
 }
 
 // CoinsMarkets https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false
 type CoinsMarkets struct {
 	BaseResult
-	Entries []CoinsMarketItem
+	Entries []CoinsMarketItem `json:"entries"`
 }
 
 // CoinsID https://api.coingecko.com/api/v3/coins/bitcoin
@@ -222,12 +222,12 @@ type CoinsIDMarketChart struct {
 
 type Exchanges struct {
 	BasePageResult
-	Entries map[string]Exchange
+	Entries map[string]Exchange `json:"entries"`
 }
 
 // Exchange https://api.coingecko.com/api/v3/exchanges
 type Exchange struct {
-	Id                          string  `json:"id"`
+	ID                          string  `json:"id"`
 	Name                        string  `json:"name"`
 	YearEstablished             *int    `json:"year_established"`
 	Country                     *string `json:"country"`
@@ -243,7 +243,7 @@ type Exchange struct {
 
 type ExchangesList struct {
 	BaseResult
-	Entries map[string]string // map[id]name
+	Entries map[string]string `json:"entries"` // map[id]name
 }
 
 // ExchangeDetail https://api.coingecko.com/api/v3/exchanges/{id}

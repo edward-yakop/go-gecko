@@ -239,7 +239,7 @@ type StatusUpdateItem struct {
 	Pin         bool   `json:"pin"`
 	Project     struct {
 		Type  string    `json:"type"`
-		Id    string    `json:"id"`
+		ID    string    `json:"id"`
 		Name  string    `json:"name"`
 		Image ImageItem `json:"image"`
 	} `json:"project"`

@@ -18,7 +18,7 @@ func main() {
 	}
 
 	for _, r := range exchanges.Entries {
-		fmt.Println(r.Id)
+		fmt.Println(r.ID)
 		fmt.Println(r.Name)
 	}
 }

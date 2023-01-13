@@ -24,7 +24,7 @@ func TestClient_Exchanges(t *testing.T) {
 	require.Len(t, got.Entries, 250)
 
 	gdax := got.Entries["gdax"]
-	assert.Equal(t, "gdax", gdax.Id, "gdax.Id")
+	assert.Equal(t, "gdax", gdax.ID, "gdax.ID")
 	assert.Equal(t, "Coinbase Exchange", gdax.Name, "gdax.Name")
 	assert.Equal(t, 2012, *gdax.YearEstablished, "gdax.YearEstablished")
 	assert.Equal(t, "United States", *gdax.Country, "gdax.Country")
