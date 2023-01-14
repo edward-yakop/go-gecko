@@ -10,18 +10,18 @@ import (
 )
 
 // CoinsList /coins/list
-func (c *Client) CoinsList() (*types.CoinList, error) {
+func (c *Client) CoinsList() (*types.CoinsList, error) {
 	coinsListURL := fmt.Sprintf("%s/coins/list", c.baseURL)
 	resp, header, err := c.makeHTTPRequest(coinsListURL)
 	if err != nil {
 		return nil, err
 	}
 
-	var data = &types.CoinList{
+	var data = &types.CoinsList{
 		BaseResult: types.NewBaseResult(header),
-		Entries:    []types.CoinsListItem{},
+		Coins:      []types.CoinsListItem{},
 	}
-	if err = json.Unmarshal(resp, &data.Entries); err != nil {
+	if err = json.Unmarshal(resp, &data.Coins); err != nil {
 		return nil, err
 	}
 
@@ -29,14 +29,14 @@ func (c *Client) CoinsList() (*types.CoinList, error) {
 }
 
 type CoinsMarketParams struct {
-	VsCurrency            string                 // Required. The target currency of market data (usd, eur, jpy, etc.)
-	CoinIds               []string               // The ids of the coin, comma separated crytocurrency symbols (base). refers to /coins/list.
-	Category              string                 // filter by coin category. Refer to /coin/categories/list
-	Order                 types.CoinsMarketOrder // When blank will be set to "market_cap_desc"
-	PageSize              int                    // Starts from 1 - 250, when invalid will be set to 100
-	PageNo                int                    // Starts from 1, when < 1, will be set to 1
-	Sparkline             bool                   // Include sparkline 7 days data (eg. true, false)
-	PriceChangePercentage []types.PriceChangePercentage
+	VsCurrency            string                        `json:"vs_currency"` // Required. The target currency of market data (usd, eur, jpy, etc.)
+	CoinIDs               []string                      `json:"coin_ids"`    // The ids of the coin, crytocurrency symbols (base). refers to /coins/list.
+	Category              string                        `json:"category"`    // filter by coin category. Refer to /coin/categories/list
+	Order                 types.CoinsMarketOrder        `json:"order"`       // When blank will be set to "market_cap_desc"
+	PageSize              int                           `json:"page_size"`   // Starts from 1 - 250, when invalid will be set to 100
+	PageNo                int                           `json:"page_no"`     // Starts from 1, when < 1, will be set to 1
+	Sparkline             bool                          `json:"sparkline"`   // Include sparkline 7 days data (eg. true, false)
+	PriceChangePercentage []types.PriceChangePercentage `json:"price_change_percentage"`
 }
 
 func (p CoinsMarketParams) Validate() error {
@@ -59,8 +59,8 @@ func (p CoinsMarketParams) encodeQueryParams() string {
 	params.Add("order", p.Order.String())
 
 	// ids
-	if len(p.CoinIds) != 0 {
-		idsParam := strings.Join(p.CoinIds, ",")
+	if len(p.CoinIDs) != 0 {
+		idsParam := strings.Join(p.CoinIDs, ",")
 		params.Add("ids", idsParam)
 	}
 
@@ -112,9 +112,9 @@ func (c *Client) CoinsMarkets(params CoinsMarketParams) (*types.CoinsMarkets, er
 
 	data := &types.CoinsMarkets{
 		BaseResult: types.NewBaseResult(header),
-		Entries:    []types.CoinsMarketItem{},
+		Markets:    []types.CoinsMarketItem{},
 	}
-	if err = json.Unmarshal(resp, &data.Entries); err != nil {
+	if err = json.Unmarshal(resp, &data.Markets); err != nil {
 		return nil, err
 	}
 
@@ -122,13 +122,13 @@ func (c *Client) CoinsMarkets(params CoinsMarketParams) (*types.CoinsMarkets, er
 }
 
 type CoinsIDParams struct {
-	CoinID        string // CoinID (can be obtained from /coins)
-	Localization  bool   // Include all localized languages in response
-	Tickers       bool   // Include tickers data. If true returns up to 100 entries. Use CoinsIDTickers
-	MarketData    bool   // Include market data
-	CommunityData bool   // Include community data
-	DeveloperData bool   // Include developer data
-	Sparkline     bool   // Include sparkline 7 days data
+	CoinID        string `json:"coin_id"`        // CoinID (can be obtained from /coins)
+	Localization  bool   `json:"localization"`   // Include all localized languages in response
+	Tickers       bool   `json:"tickers"`        // Include tickers data. If true returns up to 100 entries. Use CoinsIDTickers
+	MarketData    bool   `json:"market_data"`    // Include market data
+	CommunityData bool   `json:"community_data"` // Include community data
+	DeveloperData bool   `json:"developer_data"` // Include developer data
+	Sparkline     bool   `json:"sparkline"`      // Include sparkline 7 days data
 }
 
 func (c CoinsIDParams) Validate() error {
@@ -175,12 +175,12 @@ func (c *Client) CoinsID(params CoinsIDParams) (*types.CoinsID, error) {
 }
 
 type CoinsIDTickersParam struct {
-	CoinsID                string            // CoinID (can be obtained from /coins)
-	ExchangeIds            []string          // filter results by exchange_ids ExchangesList
-	IncludeExchangeLogo    bool              // flag to show exchange logo
-	PageNo                 int               // Page through results
-	Order                  types.TickerOrder // If not set default to trust_score_desc
-	Show2PctOrderBookDepth bool              // flag to show 2% order book depth
+	CoinsID                string            `json:"coins_id"`                    // CoinID (can be obtained from /coins)
+	ExchangeIDs            []string          `json:"exchange_ids"`                // filter results by exchange_ids ExchangesList
+	ExchangeLogo           bool              `json:"exchange_logo"`               // flag to include exchange logo
+	PageNo                 int               `json:"page_no"`                     // Page through results
+	Order                  types.TickerOrder `json:"order"`                       // If not set default to trust_score_desc
+	Show2PctOrderBookDepth bool              `json:"show_2_pct_order_book_depth"` // flag to show 2% order book depth
 }
 
 func (p CoinsIDTickersParam) Validate() error {
@@ -194,11 +194,11 @@ func (p CoinsIDTickersParam) Validate() error {
 func (p CoinsIDTickersParam) encodeNonIDQueryParams() string {
 	params := url.Values{}
 
-	if len(p.ExchangeIds) > 0 {
-		params.Add("exchange_ids", strings.Join(p.ExchangeIds, ","))
+	if len(p.ExchangeIDs) > 0 {
+		params.Add("exchange_ids", strings.Join(p.ExchangeIDs, ","))
 	}
 
-	params.Add("include_exchange_logo", format.Bool2String(p.IncludeExchangeLogo))
+	params.Add("include_exchange_logo", format.Bool2String(p.ExchangeLogo))
 
 	if p.PageNo < 1 {
 		p.PageNo = 1
@@ -234,9 +234,9 @@ func (c *Client) CoinsIDTickers(params CoinsIDTickersParam) (*types.CoinsIDTicke
 }
 
 type CoinsIDHistoryParams struct {
-	CoinID                string // CoinID (can be obtained from /coins)
-	SnapshotDate          string // The date of data snapshot in dd-mm-yyyy eg. 30-12-2017
-	IsIncludeLocalization bool   // Set to false to exclude localized languages in response
+	CoinID       string `json:"coin_id"`       // CoinID (can be obtained from /coins)
+	SnapshotDate string `json:"snapshot_date"` // The date of data snapshot in dd-mm-yyyy eg. 30-12-2017
+	Localization bool   `json:"localization"`  // Set to false to exclude localized languages in response
 }
 
 func (p CoinsIDHistoryParams) Validate() error {
@@ -255,7 +255,7 @@ func (p CoinsIDHistoryParams) encodeNonIDQueryParams() string {
 	params := url.Values{}
 
 	params.Add("date", p.SnapshotDate)
-	params.Add("localization", format.Bool2String(p.IsIncludeLocalization))
+	params.Add("localization", format.Bool2String(p.Localization))
 
 	return params.Encode()
 }
@@ -283,9 +283,9 @@ func (c *Client) CoinsIDHistory(params CoinsIDHistoryParams) (*types.CoinsIDHist
 }
 
 type CoinsIDMarketChartParams struct {
-	CoinsID    string // CoinID (can be obtained from /coins)
-	VsCurrency string // The target currency of market data (usd, eur, jpy, etc.)
-	Days       string // Data up to number of days ago (eg. 1,14,30,max)
+	CoinsID    string `json:"coins_id"`    // CoinID (can be obtained from /coins)
+	VsCurrency string `json:"vs_currency"` // The target currency of market data (usd, eur, jpy, etc.)
+	Days       string `json:"days"`        // Data up to number of days ago (eg. 1,14,30,max)
 }
 
 func (p CoinsIDMarketChartParams) Validate() error {

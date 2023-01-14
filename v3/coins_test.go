@@ -15,7 +15,7 @@ func TestCoinsList(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, list)
 
-	item := list.Entries[0]
+	item := list.Coins[0]
 	assert.Equal(t, commonBaseResult, list.BaseResult)
 	assert.Equal(t, "01coin", item.ID, "item.ID")
 }
@@ -26,7 +26,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 
 	market, err := c.CoinsMarkets(CoinsMarketParams{
 		VsCurrency: "usd",
-		CoinIds:    []string{"bitcoin", "ethereum", "steem"},
+		CoinIDs:    []string{"bitcoin", "ethereum", "steem"},
 		Order:      types.CoinMarketOrderVolumeDesc,
 		PageSize:   10,
 		PageNo:     1,
@@ -41,10 +41,10 @@ func TestClient_CoinsMarket(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	require.Len(t, market.Entries, 3)
+	require.Len(t, market.Markets, 3)
 
 	assert.Equal(t, commonBaseResult, market.BaseResult)
-	if btc := market.Entries[0]; assert.Equal(t, "bitcoin", btc.ID, "market[0].ID") {
+	if btc := market.Markets[0]; assert.Equal(t, "bitcoin", btc.ID, "market[0].ID") {
 		assert.Equal(t, "btc", btc.Symbol)
 		assert.Equal(t, "Bitcoin EY", btc.Name)
 		assert.Equal(t, 16919.92, btc.CurrentPrice)
@@ -52,7 +52,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 1, btc.MarketCapRank)
 	}
 
-	if eth := market.Entries[1]; assert.Equal(t, "ethereum", eth.ID, "market[1].ID") {
+	if eth := market.Markets[1]; assert.Equal(t, "ethereum", eth.ID, "market[1].ID") {
 		assert.Equal(t, "eth", eth.Symbol)
 		assert.Equal(t, "Ethereum EY", eth.Name)
 		assert.Equal(t, 1263.96, eth.CurrentPrice)
@@ -60,7 +60,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 2, eth.MarketCapRank)
 	}
 
-	if steem := market.Entries[2]; assert.Equal(t, "steem", steem.ID, "market[2].ID") {
+	if steem := market.Markets[2]; assert.Equal(t, "steem", steem.ID, "market[2].ID") {
 		assert.Equal(t, "steem", steem.Symbol)
 		assert.Equal(t, "Steem EY", steem.Name)
 		assert.Equal(t, 0.150837, steem.CurrentPrice)
@@ -108,7 +108,7 @@ func TestClient_CoinsIDTickers(t *testing.T) {
 	coinsIDTickers, err := c.CoinsIDTickers(CoinsIDTickersParam{
 		CoinsID:                "bitcoin",
 		PageNo:                 1,
-		IncludeExchangeLogo:    true,
+		ExchangeLogo:           true,
 		Order:                  types.TickerOrderVolumeDesc,
 		Show2PctOrderBookDepth: true,
 	})
@@ -139,9 +139,9 @@ func TestClient_CoinsIDHistory(t *testing.T) {
 	require.NoError(t, err)
 
 	history, err := c.CoinsIDHistory(CoinsIDHistoryParams{
-		CoinID:                "bitcoin",
-		SnapshotDate:          "06-01-2022",
-		IsIncludeLocalization: true,
+		CoinID:       "bitcoin",
+		SnapshotDate: "06-01-2022",
+		Localization: true,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, history)

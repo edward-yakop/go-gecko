@@ -13,13 +13,13 @@ import (
 )
 
 type SimplePriceParams struct {
-	CoinIDs              []string // CoinIds refers to CoinsList
-	VsCurrencies         []string // VsCurrencies refers to SimpleSupportedVSCurrencies
-	IncludeMarketCap     bool     // Sets to true to include market cap. Default false.
-	Include24HrVolume    bool     // Sets to true to include 24 Hr volume. Default false.
-	Include24HrChange    bool     // Sets to true to include 24 Hr change. Default false.
-	IncludeLastUpdatedAt bool     // Sets to true to include last updated at. Default false.
-	Precision            string   // valid values: empty string, "full", an int [0,18]
+	CoinIDs           []string `json:"coin_ids"`             // CoinIds refers to CoinsList
+	VsCurrencies      []string `json:"vs_currencies"`        // VsCurrencies refers to SimpleSupportedVSCurrencies
+	MarketCap         bool     `json:"market_cap"`           // Sets to true to include market cap. Default false.
+	Include24HrVolume bool     `json:"include_24_hr_volume"` // Sets to true to include 24 Hr volume. Default false.
+	Include24HrChange bool     `json:"include_24_hr_change"` // Sets to true to include 24 Hr change. Default false.
+	LastUpdatedAt     bool     `json:"last_updated_at"`      // Sets to true to include last updated at. Default false.
+	Precision         string   `json:"precision"`            // valid values: empty string, "full", an int [0,18]
 }
 
 func (params SimplePriceParams) Valid() error {
@@ -51,8 +51,8 @@ func (params SimplePriceParams) encode() string {
 
 	values.Add("ids", strings.Join(params.CoinIDs, ","))
 	values.Add("vs_currencies", strings.Join(params.VsCurrencies, ","))
-	if params.IncludeMarketCap {
-		values.Add("include_market_cap", format.Bool2String(params.IncludeMarketCap))
+	if params.MarketCap {
+		values.Add("include_market_cap", format.Bool2String(params.MarketCap))
 	}
 	if params.Include24HrVolume {
 		values.Add("include_24hr_vol", format.Bool2String(params.Include24HrVolume))
@@ -60,8 +60,8 @@ func (params SimplePriceParams) encode() string {
 	if params.Include24HrChange {
 		values.Add("include_24hr_change", format.Bool2String(params.Include24HrChange))
 	}
-	if params.IncludeLastUpdatedAt {
-		values.Add("include_last_updated_at", format.Bool2String(params.IncludeLastUpdatedAt))
+	if params.LastUpdatedAt {
+		values.Add("include_last_updated_at", format.Bool2String(params.LastUpdatedAt))
 	}
 	if params.Precision != "" {
 		values.Add("precision", params.Precision)
@@ -180,10 +180,10 @@ func (c *Client) SimpleSupportedVSCurrencies() (*types.SimpleSupportedVSCurrenci
 	}
 
 	r := &types.SimpleSupportedVSCurrencies{
-		BaseResult: types.NewBaseResult(header),
-		Entries:    make([]string, 0),
+		BaseResult:  types.NewBaseResult(header),
+		CurrencyIDs: make([]string, 0),
 	}
-	if err = json.Unmarshal(resp, &r.Entries); err != nil {
+	if err = json.Unmarshal(resp, &r.CurrencyIDs); err != nil {
 		return nil, err
 	}
 

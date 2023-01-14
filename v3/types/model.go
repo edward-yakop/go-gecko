@@ -72,12 +72,6 @@ func (cto TickerOrder) String() string {
 }
 
 // SHARED
-// coinBaseStruct [private]
-type coinBaseStruct struct {
-	ID     string `json:"id"`
-	Symbol string `json:"symbol"`
-	Name   string `json:"name"`
-}
 
 // AllCurrencies map all currencies (USD, BTC) to float64
 type AllCurrencies map[string]float64
@@ -245,14 +239,20 @@ type StatusUpdateItem struct {
 	} `json:"project"`
 }
 
-// CoinsListItem item in CoinList
+// CoinsListItem item in CoinsList
 type CoinsListItem struct {
-	coinBaseStruct
+	ID     string `json:"id"`
+	Symbol string `json:"symbol"`
+	Name   string `json:"name"`
+
+	Platforms map[string]string `json:"platforms"`
 }
 
 // CoinsMarketItem item in CoinMarket
 type CoinsMarketItem struct {
-	coinBaseStruct
+	ID                                  string         `json:"id"`
+	Symbol                              string         `json:"symbol"`
+	Name                                string         `json:"name"`
 	Image                               string         `json:"image"`
 	CurrentPrice                        float64        `json:"current_price"`
 	MarketCap                           float64        `json:"market_cap"`

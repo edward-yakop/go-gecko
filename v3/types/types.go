@@ -114,18 +114,19 @@ type SimplePrice struct {
 // SimpleSupportedVSCurrencies https://api.coingecko.com/api/v3/simple/supported_vs_currencies
 type SimpleSupportedVSCurrencies struct {
 	BaseResult
-	Entries []string `json:"entries"`
+	CurrencyIDs []string `json:"currency_ids"`
 }
 
-type CoinList struct {
+// CoinsList https://api.coingecko.com/api/v3/coins/list
+type CoinsList struct {
 	BaseResult
-	Entries []CoinsListItem `json:"entries"`
+	Coins []CoinsListItem `json:"coins"`
 }
 
 // CoinsMarkets https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false
 type CoinsMarkets struct {
 	BaseResult
-	Entries []CoinsMarketItem `json:"entries"`
+	Markets []CoinsMarketItem `json:"markets"`
 }
 
 // CoinsID https://api.coingecko.com/api/v3/coins/bitcoin
@@ -222,7 +223,7 @@ type CoinsIDMarketChart struct {
 
 type Exchanges struct {
 	BasePageResult
-	Entries map[string]Exchange `json:"entries"`
+	Exchanges map[string]Exchange `json:"exchanges"` // map[Exchange.ID]Exchange
 }
 
 // Exchange https://api.coingecko.com/api/v3/exchanges
@@ -243,7 +244,7 @@ type Exchange struct {
 
 type ExchangesList struct {
 	BaseResult
-	Entries map[string]string `json:"entries"` // map[id]name
+	Exchanges map[string]string `json:"exchanges"` // map[id]name
 }
 
 // ExchangeDetail https://api.coingecko.com/api/v3/exchanges/{id}

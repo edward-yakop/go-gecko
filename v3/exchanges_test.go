@@ -21,9 +21,9 @@ func TestClient_Exchanges(t *testing.T) {
 
 	assert.Equal(t, commonBasePageResult, got.BasePageResult)
 
-	require.Len(t, got.Entries, 250)
+	require.Len(t, got.Exchanges, 250)
 
-	gdax := got.Entries["gdax"]
+	gdax := got.Exchanges["gdax"]
 	assert.Equal(t, "gdax", gdax.ID, "gdax.ID")
 	assert.Equal(t, "Coinbase Exchange", gdax.Name, "gdax.Name")
 	assert.Equal(t, 2012, *gdax.YearEstablished, "gdax.YearEstablished")
@@ -46,7 +46,7 @@ func TestClient_ExchangesList(t *testing.T) {
 
 	assert.Equal(t, commonBaseResult, got.BaseResult)
 
-	binance, ok := got.Entries["binance"]
+	binance, ok := got.Exchanges["binance"]
 	assert.True(t, ok)
 	assert.Equal(t, "Binance", binance)
 }
@@ -82,7 +82,7 @@ func TestClient_ExchangesIDTickers(t *testing.T) {
 	got, err := c.ExchangesIDTickers(ExchangesIDTickersParams{
 		ExchangeID:             "binance",
 		CoinIds:                []string{"bitcoin"},
-		IncludeExchangeLogo:    true,
+		ExchangeLogo:           true,
 		PageNo:                 1,
 		Show2PctOrderBookDepth: true,
 		Order:                  types.TickerOrderVolumeDesc,

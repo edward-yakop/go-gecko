@@ -13,7 +13,7 @@ func main() {
 	exchangeTickers, err := cg.ExchangesIDTickers(gecko.ExchangesIDTickersParams{
 		ExchangeID:             "binance",
 		CoinIds:                []string{"bitcoin"},
-		IncludeExchangeLogo:    true,
+		ExchangeLogo:           true,
 		PageNo:                 1,
 		Show2PctOrderBookDepth: true,
 		Order:                  types.TickerOrderVolumeDesc,

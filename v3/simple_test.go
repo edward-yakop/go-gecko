@@ -12,12 +12,12 @@ func TestSimplePrice(t *testing.T) {
 	require.NoError(t, err)
 
 	sp, err := c.SimplePrice(SimplePriceParams{
-		CoinIDs:              []string{"bitcoin", "ethereum"},
-		VsCurrencies:         []string{"usd", "eur", "btc", "myr", "idr"},
-		IncludeMarketCap:     false,
-		Include24HrVolume:    false,
-		Include24HrChange:    false,
-		IncludeLastUpdatedAt: false,
+		CoinIDs:           []string{"bitcoin", "ethereum"},
+		VsCurrencies:      []string{"usd", "eur", "btc", "myr", "idr"},
+		MarketCap:         false,
+		Include24HrVolume: false,
+		Include24HrChange: false,
+		LastUpdatedAt:     false,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, sp)
@@ -95,5 +95,5 @@ func TestSimpleSupportedVSCurrencies(t *testing.T) {
 
 	assert.Equal(t, commonBaseResult, s.BaseResult)
 
-	assert.Len(t, s.Entries, 54)
+	assert.Len(t, s.CurrencyIDs, 54)
 }

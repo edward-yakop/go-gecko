@@ -11,8 +11,8 @@ import (
 )
 
 type ExchangesParam struct {
-	PageSize int
-	PageNo   int
+	PageSize int `json:"page_size"` // Total results per page, between 1-250. When invalid, default to 100.
+	PageNo   int `json:"page_no"`   // Page through results. Valid values bigger than 1. When invalid, default to 1.
 }
 
 func (p ExchangesParam) encodeQueryParams() string {
@@ -43,7 +43,7 @@ func (c *Client) Exchanges(params ExchangesParam) (*types.Exchanges, error) {
 	m := make(map[string]types.Exchange)
 	r := &types.Exchanges{
 		BasePageResult: types.NewBasePageResult(header, params.PageNo),
-		Entries:        m,
+		Exchanges:      m,
 	}
 
 	_, _ = jsonparser.ArrayEach(resp, func(ba []byte, _ jsonparser.ValueType, _ int, pErr error) {
@@ -78,7 +78,7 @@ func (c *Client) ExchangesList() (*types.ExchangesList, error) {
 	m := make(map[string]string)
 	r := &types.ExchangesList{
 		BaseResult: types.NewBaseResult(header),
-		Entries:    m,
+		Exchanges:  m,
 	}
 
 	itemPaths := [][]string{
@@ -142,12 +142,12 @@ func (c *Client) ExchangesID(exchangeID string) (*types.ExchangeDetail, error) {
 }
 
 type ExchangesIDTickersParams struct {
-	ExchangeID             string   // ExchangeID, can be obtained from ExchangesList.
-	CoinIds                []string // filter tickers by CoinIds (ref: CoinList)
-	IncludeExchangeLogo    bool     // Flag to show ExchangeLogo
-	PageNo                 int      // Page through results
-	Show2PctOrderBookDepth bool     // flag to show 2% orderbook depth i.e., CostToMoveUpUsd and CostToMoveDownUsd
-	Order                  types.TickerOrder
+	ExchangeID             string            `json:"exchange_id"`                 // ExchangeID, can be obtained from ExchangesList. Required.
+	CoinIds                []string          `json:"coin_ids"`                    // filter tickers by CoinIds (ref: CoinsList). Optional.
+	ExchangeLogo           bool              `json:"exchange_logo"`               // Include ExchangeLogo
+	PageNo                 int               `json:"page_no"`                     // Page through results. If < 1, default to 1.
+	Show2PctOrderBookDepth bool              `json:"show_2_pct_order_book_depth"` // flag to show 2% orderbook depth i.e., CostToMoveUpUsd and CostToMoveDownUsd
+	Order                  types.TickerOrder `json:"order"`                       // Default to TickerOrderTrustScoreDesc
 }
 
 func (p ExchangesIDTickersParams) Valid() error {
@@ -165,7 +165,7 @@ func (p ExchangesIDTickersParams) encodeQueryParamsWithoutExchangeID() string {
 		params.Add("coin_ids", strings.Join(p.CoinIds, ","))
 	}
 
-	params.Add("include_exchange_logo", format.Bool2String(p.IncludeExchangeLogo))
+	params.Add("include_exchange_logo", format.Bool2String(p.ExchangeLogo))
 
 	if p.PageNo < 1 {
 		p.PageNo = 1

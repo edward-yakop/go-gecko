@@ -11,13 +11,13 @@ func main() {
 	cg := gecko.NewClient(nil)
 
 	sp, err := cg.SimplePrice(gecko.SimplePriceParams{
-		CoinIDs:              []string{"bitcoin", "ethereum"},
-		VsCurrencies:         []string{"usd", "myr"},
-		IncludeMarketCap:     true,
-		Include24HrVolume:    true,
-		Include24HrChange:    true,
-		IncludeLastUpdatedAt: true,
-		Precision:            "full",
+		CoinIDs:           []string{"bitcoin", "ethereum"},
+		VsCurrencies:      []string{"usd", "myr"},
+		MarketCap:         true,
+		Include24HrVolume: true,
+		Include24HrChange: true,
+		LastUpdatedAt:     true,
+		Precision:         "full",
 	})
 	if err != nil {
 		log.Fatal(err)

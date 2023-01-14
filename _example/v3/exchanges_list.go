@@ -14,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for id, name := range exchanges.Entries {
+	for id, name := range exchanges.Exchanges {
 		fmt.Println(id, name)
 	}
 }
