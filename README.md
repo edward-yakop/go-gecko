@@ -1,6 +1,6 @@
 # CoinGecko API Client for Go
 
-[![Build Status](https://github.com/edward-yakop/go-gecko/actions/workflows/go.yml/badge.svg)](https://github.com/edward-yakop/go-gecko/actions/workflows/go.yml) [![GoDoc](https://godoc.org/github.com/edward-yakop/go-gecko?status.svg)](https://godoc.org/github.com/edward-yakop/go-gecko)
+[![Build Status](https://github.com/edward-yakop/go-gecko/actions/workflows/go.yml/badge.svg)](https://github.com/edward-yakop/go-gecko/actions/workflows/go.yml) [![Coverage Status](https://coveralls.io/repos/github/edward-yakop/go-gecko/badge.svg?branch=master)](https://coveralls.io/github/edward-yakop/go-gecko?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/edward-yakop/go-gecko)](https://goreportcard.com/report/github.com/edward-yakop/go-gecko)[![GoDoc](https://godoc.org/github.com/edward-yakop/go-gecko?status.svg)](https://godoc.org/github.com/edward-yakop/go-gecko)
 
 Simple API Client for CoinGecko written in Go
 
