@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
 )
 
 func TestCoinsList(t *testing.T) {
@@ -50,6 +51,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 16919.92, btc.CurrentPrice)
 		assert.Equal(t, 325774667477, int(btc.MarketCap))
 		assert.Equal(t, 1, btc.MarketCapRank)
+		assert.Equal(t, time.Date(2023, time.January, 7, 11, 29, 25, 554000000, time.UTC), btc.LastUpdated)
 	}
 
 	if eth := market.Markets[1]; assert.Equal(t, "ethereum", eth.ID, "market[1].ID") {
@@ -58,6 +60,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 1263.96, eth.CurrentPrice)
 		assert.Equal(t, 152320057898, int(eth.MarketCap))
 		assert.Equal(t, 2, eth.MarketCapRank)
+		assert.Equal(t, time.Date(2023, time.January, 7, 11, 29, 50, 236000000, time.UTC), eth.LastUpdated)
 	}
 
 	if steem := market.Markets[2]; assert.Equal(t, "steem", steem.ID, "market[2].ID") {
@@ -66,6 +69,7 @@ func TestClient_CoinsMarket(t *testing.T) {
 		assert.Equal(t, 0.150837, steem.CurrentPrice)
 		assert.Equal(t, 63951772, int(steem.MarketCap))
 		assert.Equal(t, 298, steem.MarketCapRank)
+		assert.Equal(t, time.Date(2023, time.January, 7, 11, 29, 50, 765000000, time.UTC), steem.LastUpdated)
 	}
 }
 
