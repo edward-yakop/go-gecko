@@ -45,6 +45,9 @@ func main() {
 		Sparkline:             true,
 		PriceChangePercentage: priceChangePercentage,
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("Total coins: ", len(market.Markets))
 	fmt.Println(market.Markets)
 }
